@@ -28,6 +28,11 @@ function SignInForm() {
         if (res?.ok) {
             router.push("/dashboard");
         } else {
+            // If the error is about verification, redirect to verify page
+            if (res?.error === "Please verify your email before signing in.") {
+                router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
+                return;
+            }
             setError(res?.error || "Invalid email or password");
         }
     }
@@ -97,9 +102,9 @@ function SignInForm() {
                 <div className="text-center text-[#b0b8d1] mt-2">
                     Don&apos;t have an account? <a href="/auth/signup" className="text-blue-400 font-semibold hover:underline">Sign Up</a>
                 </div>
+                {/* Google Material Icons CDN */}
+                <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
             </form>
-            {/* Google Material Icons CDN */}
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         </div>
     );
 }

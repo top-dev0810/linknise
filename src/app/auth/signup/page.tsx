@@ -18,7 +18,6 @@ export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState(false);
     const router = useRouter();
     const strength = getPasswordStrength(password);
 
@@ -26,7 +25,6 @@ export default function SignUp() {
         e.preventDefault();
         setLoading(true);
         setError("");
-        setSuccess(false);
         const res = await fetch("/api/auth/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -34,8 +32,7 @@ export default function SignUp() {
         });
         setLoading(false);
         if (res.ok) {
-            setSuccess(true);
-            router.push(`/auth/signin?signup=${success}`);
+            router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
         } else {
             const data = await res.json();
             setError(data.message || "Signup failed");
