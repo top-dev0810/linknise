@@ -1,12 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function VerifyForm() {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const emailParam = searchParams.get("email") || "";
+    const passwordParam = searchParams.get("password") || "";
     const [email, setEmail] = useState(emailParam);
     const [code, setCode] = useState("");
+    const [password, setPassword] = useState(passwordParam);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
@@ -14,6 +18,7 @@ export default function VerifyForm() {
     const [codeSent, setCodeSent] = useState(!!emailParam);
     const [resendLoading, setResendLoading] = useState(false);
     const [resendMessage, setResendMessage] = useState("");
+    const [showPasswordInput, setShowPasswordInput] = useState(false);
 
     useEffect(() => {
         if (emailParam) {
@@ -77,21 +82,55 @@ export default function VerifyForm() {
         if (res.ok) {
             setSuccess(true);
             setError("");
+            // Try to sign in automatically if password is available
+            if (password) {
+                setLoading(true);
+                const signInRes = await signIn("credentials", {
+                    email,
+                    password,
+                    redirect: false,
+                });
+                setLoading(false);
+                if (signInRes?.ok) {
+                    router.push("/dashboard");
+                } else {
+                    setError("Verification succeeded, but automatic sign in failed. Please sign in manually.");
+                }
+            } else {
+                setShowPasswordInput(true);
+            }
         } else {
             const data = await res.json();
             setError(data.message || "Verification failed");
         }
     }
 
+    async function handlePasswordSignIn(e: React.FormEvent) {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
+        const signInRes = await signIn("credentials", {
+            email,
+            password,
+            redirect: false,
+        });
+        setLoading(false);
+        if (signInRes?.ok) {
+            router.push("/dashboard");
+        } else {
+            setError("Sign in failed. Please check your password.");
+        }
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#10182a]">
             <form
-                onSubmit={codeSent ? handleVerify : handleSendCode}
+                onSubmit={codeSent && !showPasswordInput ? handleVerify : showPasswordInput ? handlePasswordSignIn : handleSendCode}
                 className="w-full max-w-md bg-[#181f32] rounded-2xl shadow-2xl p-8 flex flex-col gap-6 items-center border border-[#232b45]"
             >
                 <h1 className="text-3xl font-bold text-center text-white mb-2">Verify Your Email</h1>
                 <p className="text-gray-400 text-center mb-2">Enter the code sent to your email address.</p>
-                {success && <div className="text-green-500 text-sm font-semibold w-full text-center">Email verified! You can now sign in.</div>}
+                {success && !showPasswordInput && <div className="text-green-500 text-sm font-semibold w-full text-center">Email verified! Signing you in...</div>}
                 {error && <div className="text-red-500 text-sm font-semibold w-full text-center">{error}</div>}
                 {resendMessage && <div className="text-green-500 text-sm font-semibold w-full text-center">{resendMessage}</div>}
                 <div className="w-full flex flex-col gap-4">
@@ -108,7 +147,7 @@ export default function VerifyForm() {
                             />
                         </label>
                     )}
-                    {codeSent && (
+                    {codeSent && !showPasswordInput && (
                         <label className="flex flex-col gap-1 text-sm text-white font-medium">
                             Verification Code
                             <input
@@ -117,6 +156,19 @@ export default function VerifyForm() {
                                 onChange={e => setCode(e.target.value)}
                                 required
                                 placeholder="6-digit code"
+                                className="w-full px-4 py-2 rounded-md bg-[#232b45] border border-[#232b45] text-white placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary transition"
+                            />
+                        </label>
+                    )}
+                    {showPasswordInput && (
+                        <label className="flex flex-col gap-1 text-sm text-white font-medium">
+                            Password
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                required
+                                placeholder="Enter your password to sign in"
                                 className="w-full px-4 py-2 rounded-md bg-[#232b45] border border-[#232b45] text-white placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
                         </label>
@@ -131,7 +183,7 @@ export default function VerifyForm() {
                         {loading ? "Sending..." : "Send Code"}
                     </button>
                 )}
-                {codeSent && (
+                {codeSent && !showPasswordInput && (
                     <>
                         <button
                             type="submit"
@@ -149,6 +201,15 @@ export default function VerifyForm() {
                             {resendLoading ? "Resending..." : "Resend Code"}
                         </button>
                     </>
+                )}
+                {showPasswordInput && (
+                    <button
+                        type="submit"
+                        disabled={loading || !password}
+                        className="w-full py-3 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-lg shadow hover:from-purple-500 hover:to-blue-500 transition disabled:opacity-60 mt-2"
+                    >
+                        {loading ? "Signing in..." : "Sign In"}
+                    </button>
                 )}
             </form>
         </div>
