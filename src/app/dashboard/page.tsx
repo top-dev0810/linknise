@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 import Link from "next/link";
 
 export default async function DashboardPage() {
@@ -30,7 +30,7 @@ export default async function DashboardPage() {
       </div>
       {/* Link list will go here */}
       <div className="rounded-xl bg-white/80 dark:bg-gray-900/80 shadow p-6 flex flex-col items-center justify-center min-h-[200px] text-gray-500 dark:text-gray-400">
-        <span>No links yet. Click "+ New Link" to create your first unlock page!</span>
+        <span>No links yet. Click &quot;+ New Link&quot; to create your first unlock page!</span>
       </div>
     </div>
   );

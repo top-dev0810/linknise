@@ -3,8 +3,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
+import { Suspense } from "react";
 
-export default function SignIn() {
+function SignInForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -100,5 +101,13 @@ export default function SignIn() {
             {/* Google Material Icons CDN */}
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         </div>
+    );
+}
+
+export default function SignIn() {
+    return (
+        <Suspense>
+            <SignInForm />
+        </Suspense>
     );
 } 

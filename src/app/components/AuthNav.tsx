@@ -1,6 +1,7 @@
 "use client";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AuthNav() {
   const { data: session, status } = useSession();
@@ -24,7 +25,7 @@ export default function AuthNav() {
     <div className="flex items-center gap-3">
       <Link href="/profile" className="flex items-center gap-2 hover:underline">
         {session.user?.image && (
-          <img src={session.user.image} alt="avatar" className="w-8 h-8 rounded-full border" />
+          <Image src={session.user.image} alt="avatar" width={32} height={32} className="w-8 h-8 rounded-full border" />
         )}
         <span className="font-medium">{session.user?.name || session.user?.email}</span>
       </Link>

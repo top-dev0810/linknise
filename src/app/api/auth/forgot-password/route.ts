@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongodb";
-import { User } from "@/lib/user.model";
+import { User, IUser } from "@/lib/user.model";
 import { sendMail } from "@/lib/mail";
 
 function generateCode() {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Email is required." }, { status: 400 });
     }
     await dbConnect();
-    const user = await User.findOne({ email });
+    const user = (await User.findOne({ email })) as IUser | null;
     if (user && user.verified) {
       const resetCode = generateCode();
       const resetCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     }
     // Always return success for security
     return NextResponse.json({ message: "If your email is registered and verified, a reset code has been sent." }, { status: 200 });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ message: "Server error." }, { status: 500 });
   }
 } 

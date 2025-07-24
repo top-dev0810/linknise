@@ -1,5 +1,3 @@
-import Link from "next/link";
-import Image from "next/image";
 import { FaLock, FaChartLine, FaPalette, FaMoneyBillWave } from "react-icons/fa";
 
 export default function Home() {

@@ -24,7 +24,7 @@ export async function POST(req: Request) {
         user.verifyCodeExpires = null;
         await user.save();
         return NextResponse.json({ message: "Email verified." }, { status: 200 });
-    } catch (e) {
+    } catch {
         return NextResponse.json({ message: "Server error." }, { status: 500 });
     }
 } 

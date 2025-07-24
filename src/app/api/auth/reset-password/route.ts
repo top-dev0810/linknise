@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     user.resetCodeExpires = null;
     await user.save();
     return NextResponse.json({ message: "Password reset successful." }, { status: 200 });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ message: "Server error." }, { status: 500 });
   }
 } 

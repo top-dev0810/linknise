@@ -35,7 +35,7 @@ export default function SignUp() {
         setLoading(false);
         if (res.ok) {
             setSuccess(true);
-            router.push("/auth/signin?signup=success");
+            router.push(`/auth/signin?signup=${success}`);
         } else {
             const data = await res.json();
             setError(data.message || "Signup failed");
