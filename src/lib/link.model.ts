@@ -13,8 +13,8 @@ const LinkSchema: Schema<ILink> = new Schema(
     {
         url: { type: String, required: true },
         title: { type: String, required: true },
-        description: { type: String },
-        unlockType: { type: String, enum: ["click", "visit", "form"], default: "click" },
+        description: { type: String, required: true },
+        unlockType: { type: String, required: true },
         creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
         unlockedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
     },
