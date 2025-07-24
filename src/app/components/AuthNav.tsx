@@ -1,0 +1,39 @@
+"use client";
+import { useSession, signIn, signOut } from "next-auth/react";
+import Link from "next/link";
+
+export default function AuthNav() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <div className="animate-pulse w-24 h-8 bg-gray-200 rounded" />;
+  }
+
+  if (!session) {
+    return (
+      <button
+        onClick={() => signIn()}
+        className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold shadow hover:from-blue-600 hover:to-purple-600 transition"
+      >
+        Sign In
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <Link href="/profile" className="flex items-center gap-2 hover:underline">
+        {session.user?.image && (
+          <img src={session.user.image} alt="avatar" className="w-8 h-8 rounded-full border" />
+        )}
+        <span className="font-medium">{session.user?.name || session.user?.email}</span>
+      </Link>
+      <button
+        onClick={() => signOut()}
+        className="px-3 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+      >
+        Sign Out
+      </button>
+    </div>
+  );
+} 
