@@ -28,18 +28,16 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                     {unlockActions.map((action, idx) => (
                         <div key={idx} className="flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2">
                             <span className="text-xs font-semibold text-gray-300">{action.label}</span>
-                            <a href={action.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 underline break-all">{action.url}</a>
+                            <span className="text-xs text-blue-400 break-all">{action.url}</span>
                         </div>
                     ))}
                 </div>
-                <a
-                    href={destinationUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <button
+                    onClick={() => window.open(destinationUrl, '_blank')}
                     className="w-full px-6 py-3 rounded-lg bg-green-600 text-white font-bold shadow hover:bg-green-700 transition text-center text-lg flex items-center justify-center gap-2"
                 >
                     <FaUnlock /> Go to Unlocked Content
-                </a>
+                </button>
                 <div className="text-green-400 font-semibold flex items-center gap-2">
                     <FaUnlock /> Unlocked!
                 </div>

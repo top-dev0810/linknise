@@ -238,35 +238,39 @@ export default function CreateLinkPage() {
                 <div className="mb-2">
                     <div className="font-semibold text-gray-300 mb-2 flex items-center gap-2">UNLOCK ACTIONS</div>
                     {unlockActions.map((action, idx) => (
-                        <div key={idx} className="flex flex-col md:flex-row items-center gap-2 mb-3 bg-[#181c1b] p-4 rounded-xl border border-gray-700 relative">
-                            <select
-                                className="px-3 py-2 rounded-lg bg-[#101213] border border-gray-700 text-white focus:ring-2 focus:ring-green-500"
-                                value={action.platform}
-                                onChange={e => handleActionChange(idx, "platform", e.target.value)}
-                            >
-                                {PLATFORM_OPTIONS.map(opt => (
-                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
-                            <select
-                                className="px-3 py-2 rounded-lg bg-[#101213] border border-gray-700 text-white focus:ring-2 focus:ring-green-500"
-                                value={action.type}
-                                onChange={e => handleActionChange(idx, "type", e.target.value)}
-                            >
-                                {getActionTypeOptions(action.platform).map(opt => (
-                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
-                            <input
-                                type="url"
-                                className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                                placeholder="Enter action URL *"
-                                value={action.url}
-                                onChange={e => handleActionUrlChange(idx, e.target.value)}
-                                required
-                            />
-                            {unlockActions.length > 1 && (
-                                <button type="button" className="text-red-400 hover:text-red-600 ml-2" onClick={() => removeUnlockAction(idx)} title="Remove Step"><FaTrash /></button>
+                        <div key={idx} className="flex flex-col gap-2 mb-3 bg-[#181c1b] p-4 rounded-xl border border-gray-700 relative">
+                            <div className="flex flex-col md:flex-row items-center gap-2">
+                                <select
+                                    className="px-3 py-2 rounded-lg bg-[#101213] border border-gray-700 text-white focus:ring-2 focus:ring-green-500"
+                                    value={action.platform}
+                                    onChange={e => handleActionChange(idx, "platform", e.target.value)}
+                                >
+                                    {PLATFORM_OPTIONS.map(opt => (
+                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                    ))}
+                                </select>
+                                <select
+                                    className="px-3 py-2 rounded-lg bg-[#101213] border border-gray-700 text-white focus:ring-2 focus:ring-green-500"
+                                    value={action.type}
+                                    onChange={e => handleActionChange(idx, "type", e.target.value)}
+                                >
+                                    {getActionTypeOptions(action.platform).map(opt => (
+                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                    ))}
+                                </select>
+                                {unlockActions.length > 1 && (
+                                    <button type="button" className="text-red-400 hover:text-red-600" onClick={() => removeUnlockAction(idx)} title="Remove Step"><FaTrash /></button>
+                                )}
+                            </div>
+                            {action.platform && action.type && (
+                                <input
+                                    type="url"
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    placeholder="Enter action URL *"
+                                    value={action.url}
+                                    onChange={e => handleActionUrlChange(idx, e.target.value)}
+                                    required
+                                />
                             )}
                         </div>
                     ))}
