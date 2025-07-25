@@ -9,7 +9,7 @@ export interface IUnlockAction {
 }
 
 export interface ILink extends Document {
-    url: string;
+    destinationUrl: string;
     title: string;
     description?: string;
     coverImage?: string;
@@ -33,7 +33,7 @@ const UnlockActionSchema: Schema = new Schema(
 
 const LinkSchema: Schema<ILink> = new Schema(
     {
-        url: { type: String, required: true },
+        destinationUrl: { type: String, required: true },
         title: { type: String, required: true },
         description: { type: String, required: true },
         coverImage: { type: String },

@@ -34,13 +34,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const title = Array.isArray(fields.title) ? fields.title[0] : fields.title;
         const description = Array.isArray(fields.description) ? fields.description[0] : fields.description;
         const unlockActionsRaw = Array.isArray(fields.unlockActions) ? fields.unlockActions[0] : fields.unlockActions;
+        const destinationUrl = Array.isArray(fields.destinationUrl) ? fields.destinationUrl[0] : fields.destinationUrl;
         let unlockActions = [];
         try {
             unlockActions = JSON.parse(unlockActionsRaw || '[]');
         } catch {
             return res.status(400).json({ message: 'Invalid unlock actions.' });
         }
-        if (!title || !description || !Array.isArray(unlockActions) || unlockActions.length === 0) {
+        if (!title || !description || !Array.isArray(unlockActions) || unlockActions.length === 0 || !destinationUrl) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
         let coverImage = '';
@@ -62,6 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             title,
             description,
             unlockActions,
+            destinationUrl,
             coverImage,
             creator: user._id,
         });

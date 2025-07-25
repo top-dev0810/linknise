@@ -19,6 +19,7 @@ interface Creator {
 
 interface LinkData {
     unlockActions: UnlockAction[];
+    destinationUrl: string;
     title: string;
     description?: string;
     coverImage?: string;
@@ -67,7 +68,7 @@ export default function UnlockPage() {
                         <div className="text-xs text-gray-400">{creatorLinksCount} {creatorLinksCount === 1 ? 'post' : 'posts'}</div>
                     </div>
                 </div>
-                <UnlockClient unlockActions={link.unlockActions} />
+                <UnlockClient unlockActions={link.unlockActions} destinationUrl={link.destinationUrl} />
             </div>
         </div>
     );

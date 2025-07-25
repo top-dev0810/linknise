@@ -9,7 +9,7 @@ interface UnlockAction {
     url: string;
 }
 
-export default function UnlockClient({ unlockActions }: { unlockActions: UnlockAction[] }) {
+export default function UnlockClient({ unlockActions, destinationUrl }: { unlockActions: UnlockAction[]; destinationUrl: string }) {
     const [completed, setCompleted] = useState<boolean[]>(unlockActions.map(() => false));
     const [unlocked, setUnlocked] = useState(false);
     const [notRobot, setNotRobot] = useState(false);
@@ -33,7 +33,7 @@ export default function UnlockClient({ unlockActions }: { unlockActions: UnlockA
                     ))}
                 </div>
                 <a
-                    href={unlockActions[0]?.url || '#'}
+                    href={destinationUrl || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full px-6 py-3 rounded-lg bg-green-600 text-white font-bold shadow hover:bg-green-700 transition text-center text-lg flex items-center justify-center gap-2"

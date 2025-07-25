@@ -88,6 +88,7 @@ export default function CreateLinkPage() {
     const [unlockActions, setUnlockActions] = useState<UnlockAction[]>([
         { platform: "Other", type: "visit", label: "Visit Website", url: "" },
     ]);
+    const [destinationUrl, setDestinationUrl] = useState("");
 
     function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -159,6 +160,7 @@ export default function CreateLinkPage() {
             formData.append("title", title);
             formData.append("description", description);
             formData.append("unlockActions", JSON.stringify(unlockActions));
+            formData.append("destinationUrl", destinationUrl);
             if (cover) formData.append("cover", cover);
             const res = await fetch("/api/links", {
                 method: "POST",
@@ -271,6 +273,11 @@ export default function CreateLinkPage() {
                     <button type="button" className="flex items-center gap-2 text-green-400 hover:text-green-600 mt-2" onClick={addUnlockAction}><FaPlus /> Add Step</button>
                 </div>
                 {/* End Unlock Actions */}
+                {/* Destination URL */}
+                <div className="relative mb-2">
+                    <input type="url" id="destinationUrl" className="peer w-full px-4 py-3 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-transparent" placeholder="Enter destination URL *" value={destinationUrl} onChange={e => setDestinationUrl(e.target.value)} required />
+                    <label htmlFor="destinationUrl" className="absolute left-4 top-3 text-gray-400 text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter destination URL *</label>
+                </div>
                 <div className="flex items-center gap-2 mt-2">
                     <input type="checkbox" id="not-robot" checked={notRobot} onChange={e => setNotRobot(e.target.checked)} className="accent-green-500 w-5 h-5 rounded border-2 border-gray-600 focus:ring-2 focus:ring-green-400 transition" />
                     <label htmlFor="not-robot" className="text-gray-300 text-base select-none cursor-pointer font-medium">I’m not a robot</label>
