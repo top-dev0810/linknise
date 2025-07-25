@@ -5,13 +5,20 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import UnlockClient from './UnlockClient';
 
+interface UnlockAction {
+    platform: string;
+    type: string;
+    label: string;
+    url: string;
+}
+
 interface Creator {
     name?: string;
     email?: string;
 }
 
 interface LinkData {
-    url: string;
+    unlockActions: UnlockAction[];
     title: string;
     description?: string;
     coverImage?: string;
@@ -60,7 +67,7 @@ export default function UnlockPage() {
                         <div className="text-xs text-gray-400">{creatorLinksCount} {creatorLinksCount === 1 ? 'post' : 'posts'}</div>
                     </div>
                 </div>
-                <UnlockClient url={link.url} />
+                <UnlockClient unlockActions={link.unlockActions} />
             </div>
         </div>
     );

@@ -1,16 +1,35 @@
 import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
+export interface IUnlockAction {
+    platform: string; // e.g., 'YouTube', 'Roblox', 'Other'
+    type: string; // e.g., 'visit', 'subscribe', 'follow', etc.
+    label: string; // e.g., 'Follow user', 'Subscribe to channel'
+    url: string;
+    validationType?: string; // e.g., 'click', 'visit', 'api', etc.
+}
+
 export interface ILink extends Document {
     url: string;
     title: string;
     description?: string;
     coverImage?: string;
-    unlockType: "click" | "visit" | "form";
+    unlockActions: IUnlockAction[];
     creator: Types.ObjectId;
     unlockedBy: Types.ObjectId[];
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+const UnlockActionSchema: Schema = new Schema(
+    {
+        platform: { type: String, required: true },
+        type: { type: String, required: true },
+        label: { type: String, required: true },
+        url: { type: String, required: true },
+        validationType: { type: String },
+    },
+    { _id: false }
+);
 
 const LinkSchema: Schema<ILink> = new Schema(
     {
@@ -18,7 +37,7 @@ const LinkSchema: Schema<ILink> = new Schema(
         title: { type: String, required: true },
         description: { type: String, required: true },
         coverImage: { type: String },
-        unlockType: { type: String },
+        unlockActions: { type: [UnlockActionSchema], required: true },
         creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
         unlockedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
     },
