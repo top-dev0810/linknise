@@ -42,7 +42,7 @@ export default function PublicProfilePage({ username }: { username: string }) {
     useEffect(() => {
         setLoading(true);
         setError("");
-        fetch(`/api/profile/${username}`)
+        fetch(`/api/profile?username=${username}`)
             .then(async (res) => {
                 if (!res.ok) throw new Error("User not found");
                 const data = await res.json();

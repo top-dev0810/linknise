@@ -34,7 +34,8 @@ export default async function RootLayout({
     image?: string | null;
     username?: string | null;
   };
-  const user = session?.user as UserWithUsername | undefined;
+  const user = session?.user as UserWithUsername;
+  const username = user.username || user.name || user.email;
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
@@ -43,7 +44,7 @@ export default async function RootLayout({
             <Link href="/" className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">LinkUnlocker</Link>
             <div className="flex gap-4 items-center">
               <Link href="/dashboard" className="hover:underline font-medium">Dashboard</Link>
-              <Link href={`/public?username=${user?.username || user?.name || user?.email}`} className="hover:underline font-medium">Profile</Link>
+              <Link href={`/public?username=${username}`} className="hover:underline font-medium">Profile</Link>
               <AuthNav />
             </div>
           </nav>
