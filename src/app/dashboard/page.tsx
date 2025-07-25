@@ -19,7 +19,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4 flex flex-col gap-8">
+    <div className="pt-18 max-w-3xl mx-auto py-10 px-4 flex flex-col gap-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">Your Links</h1>
         <Link href="/dashboard/create">

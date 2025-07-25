@@ -5,7 +5,7 @@ import clientPromise from "@/lib/mongodbPromise";
 import { dbConnect } from "@/lib/mongodb";
 import { User } from "@/lib/user.model";
 import bcrypt from "bcryptjs";
-import type { Session, User as NextAuthUser, SessionStrategy } from "next-auth";
+import type { Session, User as NextAuthUser, SessionStrategy, Account } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
 function isUserWithPassword(user: unknown): user is { password: string; verified: boolean; _id: string; email: string; name?: string; image?: string } {
@@ -31,13 +31,16 @@ export const authOptions = {
             async authorize(credentials: Record<"email" | "password", string> | undefined) {
                 if (!credentials) return null;
                 await dbConnect();
-                const user = await User.findOne({ email: credentials.email }).select("+password verified");
+                // Explicitly select all needed fields
+                const user = await User.findOne({ email: credentials.email }).select("+password verified email name image");
+                console.log("Authorize user:", user);
                 if (!isUserWithPassword(user)) return null;
                 const valid = await bcrypt.compare(credentials.password, user.password);
                 if (!valid) return null;
                 if (!user.verified) {
                     throw new Error("Please verify your email before signing in.");
                 }
+                // Make sure email is present
                 return { id: String(user._id), email: user.email, name: user.name, image: user.image } as NextAuthUser;
             },
         }),
@@ -50,22 +53,60 @@ export const authOptions = {
         strategy: "jwt" as SessionStrategy,
     },
     callbacks: {
-        async session({ session }: { session: Session }) {
+        async signIn({ user, account }: { user: NextAuthUser; account: Account | null }) {
+            if (account?.provider === "google") {
+                await dbConnect();
+                const dbUser = await User.findOne({ email: user.email });
+                if (dbUser && !dbUser.username) {
+                    // Generate username for Google users
+                    let baseUsername = "";
+                    if (dbUser.name) {
+                        baseUsername = dbUser.name.replace(/\s+/g, "").toLowerCase();
+                    } else {
+                        baseUsername = user.email?.split("@")[0] || "user";
+                    }
+
+                    baseUsername = baseUsername.replace(/[^a-zA-Z0-9]/g, "");
+                    if (!/^[a-zA-Z]/.test(baseUsername)) {
+                        baseUsername = "user" + baseUsername;
+                    }
+
+                    let username = baseUsername;
+                    let counter = 1;
+                    while (await User.findOne({ username })) {
+                        username = `${baseUsername}${counter}`;
+                        counter++;
+                    }
+
+                    dbUser.username = username;
+                    await dbUser.save();
+                }
+            }
+            return true;
+        },
+        async session({ session, token }: { session: Session, token: JWT }) {
             if (session?.user) {
+                // Always set email from token
+                session.user.email = token.email as string;
                 await dbConnect();
                 const dbUser = await User.findOne({ email: session.user.email });
                 if (dbUser && session.user) {
                     (session.user as { id?: string }).id = dbUser._id?.toString();
                     session.user.name = dbUser.name;
                     session.user.image = dbUser.image;
+                    (session.user as { username?: string }).username = dbUser.username;
                 }
             }
             return session;
         },
         async jwt({ token, user }: { token: JWT; user?: NextAuthUser }) {
-            if (user && "id" in user) {
+            if (user) {
+                console.log(user);
+
                 (token as { id?: string }).id = (user as { id?: string }).id;
+                token.email = user.email;
             }
+            // If token already has email, keep it
             return token;
         },
     },

@@ -1,4 +1,5 @@
 import { FaLock, FaChartLine, FaPalette, FaMoneyBillWave } from "react-icons/fa";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -14,11 +15,11 @@ export default function Home() {
           Gate your content behind social actions and watch your audience grow. <br />
           Create, share, and manage unlockable links with real-time analytics and beautiful, branded pages.
         </p>
-        <a href="/auth/signup" className="inline-block">
+        <Link href="/auth/signup" className="inline-block">
           <button className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-lg shadow-lg hover:from-blue-600 hover:to-purple-600 transition">
             Get Started Free
           </button>
-        </a>
+        </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-16 w-full max-w-4xl">
         <div className="rounded-2xl bg-[#181f32] shadow-xl p-8 flex flex-col items-center text-center border border-[#232b45]">

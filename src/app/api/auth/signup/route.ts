@@ -22,9 +22,26 @@ export async function POST(req: Request) {
     const hashed = await bcrypt.hash(password, 10);
     const verifyCode = generateCode();
     const verifyCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+
+    // Generate username from name
+    let baseUsername = name.replace(/\s+/g, "").toLowerCase();
+    baseUsername = baseUsername.replace(/[^a-zA-Z0-9]/g, "");
+    if (!/^[a-zA-Z]/.test(baseUsername)) {
+      baseUsername = "user" + baseUsername;
+    }
+
+    // Check if username exists and add number if needed
+    let username = baseUsername;
+    let counter = 1;
+    while (await User.findOne({ username })) {
+      username = `${baseUsername}${counter}`;
+      counter++;
+    }
+
     await User.create({
       name,
       email,
+      username,
       password: hashed,
       verified: false,
       verifyCode,
@@ -40,7 +57,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "User created. Verification required." }, { status: 201 });
   } catch (e) {
     console.log(e);
-    
+
     return NextResponse.json({ message: "Server error." }, { status: 500 });
   }
 } 

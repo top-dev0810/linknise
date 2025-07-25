@@ -21,13 +21,23 @@ export default function AuthNav() {
     );
   }
 
+  // Use username if available, else fallback to name/email
+  type UserWithUsername = {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    username?: string | null;
+  };
+  const user = session.user as UserWithUsername;
+  const username = user.username || user.name || user.email;
+
   return (
     <div className="flex items-center gap-3">
-      <Link href="/profile" className="flex items-center gap-2 hover:underline">
+      <Link href={`/public?username=${username}`} className="flex items-center gap-2 hover:underline">
         {session.user?.image && (
           <Image src={session.user.image} alt="avatar" width={32} height={32} className="w-8 h-8 rounded-full border" />
         )}
-        <span className="font-medium">{session.user?.name || session.user?.email}</span>
+        <span className="font-medium text-white">{username}</span>
       </Link>
       <button
         onClick={() => signOut()}

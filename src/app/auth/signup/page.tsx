@@ -3,6 +3,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
+import Link from "next/link";
 
 function getPasswordStrength(password: string) {
     if (password.length < 6) return { label: "Very Weak", color: "text-red-500" };
@@ -113,7 +114,7 @@ export default function SignUp() {
                     {loading ? "Signing up..." : "Sign Up"}
                 </button>
                 <div className="text-center text-[#b0b8d1] mt-2">
-                    Already have an account? <a href="/auth/signin" className="text-blue-400 font-semibold hover:underline">Sign In</a>
+                    Already have an account? <Link href="/auth/signin" className="text-blue-400 font-semibold hover:underline">Sign In</Link>
                 </div>
             </form>
             {/* Google Material Icons CDN */}

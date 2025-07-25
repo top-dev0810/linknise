@@ -4,9 +4,12 @@ export interface ILink extends Document {
     url: string;
     title: string;
     description?: string;
+    coverImage?: string;
     unlockType: "click" | "visit" | "form";
     creator: Types.ObjectId;
     unlockedBy: Types.ObjectId[];
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 const LinkSchema: Schema<ILink> = new Schema(
@@ -14,7 +17,8 @@ const LinkSchema: Schema<ILink> = new Schema(
         url: { type: String, required: true },
         title: { type: String, required: true },
         description: { type: String, required: true },
-        unlockType: { type: String, required: true },
+        coverImage: { type: String },
+        unlockType: { type: String },
         creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
         unlockedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
     },

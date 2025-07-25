@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { Suspense } from "react";
+import Link from "next/link";
 
 function SignInForm() {
     const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ function SignInForm() {
     const [error, setError] = useState("");
     const router = useRouter();
     const params = useSearchParams();
-    const signupSuccess = params.get("signup") === "success";
+    const signupSuccess = params?.get("signup") === "success";
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -100,7 +101,7 @@ function SignInForm() {
                     {loading ? "Signing in..." : "Sign In"}
                 </button>
                 <div className="text-center text-[#b0b8d1] mt-2">
-                    Don&apos;t have an account? <a href="/auth/signup" className="text-blue-400 font-semibold hover:underline">Sign Up</a>
+                    Don&apos;t have an account? <Link href="/auth/signup" className="text-blue-400 font-semibold hover:underline">Sign Up</Link>
                 </div>
                 {/* Google Material Icons CDN */}
                 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />

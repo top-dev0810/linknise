@@ -6,8 +6,8 @@ import { signIn } from "next-auth/react";
 export default function VerifyForm() {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const emailParam = searchParams.get("email") || "";
-    const passwordParam = searchParams.get("password") || "";
+    const emailParam = searchParams?.get("email") || "";
+    const passwordParam = searchParams?.get("password") || "";
     const [email, setEmail] = useState(emailParam);
     const [code, setCode] = useState("");
     const [password, setPassword] = useState(passwordParam);
