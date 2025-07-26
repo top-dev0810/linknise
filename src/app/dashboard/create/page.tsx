@@ -2,151 +2,8 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { FaChevronLeft, FaRegImage, FaRegQuestionCircle, FaLock, FaPlus, FaTrash, FaDiscord, FaYoutube, FaInstagram, FaTwitter, FaTiktok, FaFacebook, FaTelegram, FaSpotify, FaTwitch, FaReddit, FaGlobe } from "react-icons/fa";
-
-export const PLATFORM_OPTIONS = [
-    { value: "YouTube", label: "YouTube", icon: FaYoutube, color: "bg-red-600" },
-    { value: "Instagram", label: "Instagram", icon: FaInstagram, color: "bg-pink-600" },
-    { value: "X", label: "X", icon: FaTwitter, color: "bg-black" },
-    { value: "TikTok", label: "TikTok", icon: FaTiktok, color: "bg-black" },
-    { value: "Facebook", label: "Facebook", icon: FaFacebook, color: "bg-blue-600" },
-    { value: "Discord", label: "Discord", icon: FaDiscord, color: "bg-purple-600" },
-    { value: "Threads", label: "Threads", icon: FaInstagram, color: "bg-black" },
-    { value: "VK", label: "VK", icon: FaGlobe, color: "bg-blue-500" },
-    { value: "Pinterest", label: "Pinterest", icon: FaGlobe, color: "bg-red-500" },
-    { value: "Telegram", label: "Telegram", icon: FaTelegram, color: "bg-blue-500" },
-    { value: "Spotify", label: "Spotify", icon: FaSpotify, color: "bg-green-500" },
-    { value: "Soundcloud", label: "Soundcloud", icon: FaGlobe, color: "bg-orange-500" },
-    { value: "Twitch", label: "Twitch", icon: FaTwitch, color: "bg-purple-600" },
-    { value: "Reddit", label: "Reddit", icon: FaReddit, color: "bg-orange-500" },
-    { value: "Beatstars", label: "Beatstars", icon: FaGlobe, color: "bg-red-600" },
-    { value: "Roblox", label: "Roblox", icon: FaGlobe, color: "bg-red-500" },
-    { value: "Other", label: "Other", icon: FaGlobe, color: "bg-gray-600" },
-];
-
- const ACTION_TYPE_OPTIONS: {
-    [key: string]: { value: string; label: string; validationExample: string }[];
-    YouTube: { value: string; label: string; validationExample: string }[];
-    Instagram: { value: string; label: string; validationExample: string }[];
-    X: { value: string; label: string; validationExample: string }[];
-    TikTok: { value: string; label: string; validationExample: string }[];
-    Facebook: { value: string; label: string; validationExample: string }[];
-    Discord: { value: string; label: string; validationExample: string }[];
-    Threads: { value: string; label: string; validationExample: string }[];
-    VK: { value: string; label: string; validationExample: string }[];
-    Pinterest: { value: string; label: string; validationExample: string }[];
-    Telegram: { value: string; label: string; validationExample: string }[];
-    Spotify: { value: string; label: string; validationExample: string }[];
-    Soundcloud: { value: string; label: string; validationExample: string }[];
-    Twitch: { value: string; label: string; validationExample: string }[];
-    Reddit: { value: string; label: string; validationExample: string }[];
-    Beatstars: { value: string; label: string; validationExample: string }[];
-    Roblox: { value: string; label: string; validationExample: string }[];
-    Other: { value: string; label: string; validationExample: string }[];
-} = {
-    YouTube: [
-        { value: "subscribe", label: "Subscribe to channel", validationExample: "https://youtube.com/channel/UC..." },
-        { value: "subscribe_notify", label: "Subscribe & enable notifications", validationExample: "https://youtube.com/channel/UC..." },
-        { value: "like", label: "Like video", validationExample: "https://youtube.com/watch?v=..." },
-        { value: "comment", label: "Comment on video", validationExample: "https://youtube.com/watch?v=..." },
-        { value: "like_comment", label: "Like & Comment video", validationExample: "https://youtube.com/watch?v=..." },
-        { value: "vote", label: "Vote on community post", validationExample: "https://youtube.com/post/..." },
-        { value: "share", label: "Share video", validationExample: "https://youtube.com/watch?v=..." },
-    ],
-    Instagram: [
-        { value: "follow", label: "Follow profile", validationExample: "https://instagram.com/username" },
-        { value: "like", label: "Like post", validationExample: "https://instagram.com/p/postid" },
-        { value: "comment", label: "Comment on picture", validationExample: "https://instagram.com/p/postid" },
-        { value: "share", label: "Share post", validationExample: "https://instagram.com/p/postid" },
-    ],
-    X: [
-        { value: "follow", label: "Follow profile", validationExample: "https://x.com/username" },
-        { value: "like", label: "Like post", validationExample: "https://x.com/username/status/..." },
-        { value: "comment", label: "Comment on post", validationExample: "https://x.com/username/status/..." },
-        { value: "repost", label: "Repost", validationExample: "https://x.com/username/status/..." },
-    ],
-    TikTok: [
-        { value: "follow", label: "Follow profile", validationExample: "https://tiktok.com/@username" },
-        { value: "like", label: "Like tiktok", validationExample: "https://tiktok.com/@username/video/..." },
-        { value: "comment", label: "Comment on tiktok", validationExample: "https://tiktok.com/@username/video/..." },
-        { value: "share", label: "Share tiktok", validationExample: "https://tiktok.com/@username/video/..." },
-    ],
-    Facebook: [
-        { value: "like_page", label: "Like page", validationExample: "https://facebook.com/pagename" },
-        { value: "like_post", label: "Like post", validationExample: "https://facebook.com/username/posts/..." },
-        { value: "react", label: "React to post", validationExample: "https://facebook.com/username/posts/..." },
-        { value: "comment", label: "Comment on post", validationExample: "https://facebook.com/username/posts/..." },
-        { value: "share", label: "Share post", validationExample: "https://facebook.com/username/posts/..." },
-    ],
-    Discord: [
-        { value: "join_server", label: "Join server", validationExample: "https://discord.gg/inviteCode" },
-    ],
-    Threads: [
-        { value: "follow", label: "Follow profile", validationExample: "https://threads.net/@username" },
-    ],
-    VK: [
-        { value: "follow", label: "Follow profile", validationExample: "https://vk.com/username" },
-        { value: "follow_group", label: "Follow group", validationExample: "https://vk.com/groupname" },
-        { value: "like", label: "Like post", validationExample: "https://vk.com/wall-..." },
-    ],
-    Pinterest: [
-        { value: "follow_account", label: "Follow account", validationExample: "https://pinterest.com/username" },
-        { value: "follow_board", label: "Follow board", validationExample: "https://pinterest.com/username/boardname" },
-        { value: "like", label: "Like pin", validationExample: "https://pinterest.com/pin/..." },
-        { value: "repin", label: "Repin", validationExample: "https://pinterest.com/pin/..." },
-    ],
-    Telegram: [
-        { value: "join_channel", label: "Join channel", validationExample: "https://t.me/channelname" },
-        { value: "join_group", label: "Join group", validationExample: "https://t.me/groupname" },
-        { value: "react", label: "React to message", validationExample: "https://t.me/channelname/123" },
-        { value: "vote", label: "Vote in poll", validationExample: "https://t.me/channelname/123" },
-    ],
-    Spotify: [
-        { value: "follow_artist", label: "Follow artist", validationExample: "https://open.spotify.com/artist/..." },
-        { value: "like_song", label: "Like song", validationExample: "https://open.spotify.com/track/..." },
-        { value: "like_playlist", label: "Like playlist", validationExample: "https://open.spotify.com/playlist/..." },
-        { value: "add_playlist", label: "Add to playlist", validationExample: "https://open.spotify.com/track/..." },
-        { value: "like_album", label: "Like album", validationExample: "https://open.spotify.com/album/..." },
-    ],
-    Soundcloud: [
-        { value: "follow_artist", label: "Follow artist", validationExample: "https://soundcloud.com/artistname" },
-        { value: "like_track", label: "Like track", validationExample: "https://soundcloud.com/artistname/trackname" },
-        { value: "comment", label: "Comment track", validationExample: "https://soundcloud.com/artistname/trackname" },
-        { value: "repost", label: "Repost track", validationExample: "https://soundcloud.com/artistname/trackname" },
-    ],
-    Twitch: [
-        { value: "follow", label: "Follow streamer", validationExample: "https://twitch.tv/streamername" },
-    ],
-    Reddit: [
-        { value: "upvote_post", label: "↑ Upvote post", validationExample: "https://reddit.com/r/subreddit/comments/..." },
-        { value: "upvote_comment", label: "↑ Upvote comment", validationExample: "https://reddit.com/r/subreddit/comments/..." },
-        { value: "join", label: "Join subreddit", validationExample: "https://reddit.com/r/subreddit" },
-    ],
-    Beatstars: [
-        { value: "follow_producer", label: "Follow producer", validationExample: "https://beatstars.com/producername" },
-        { value: "like_beat", label: "Like beat", validationExample: "https://beatstars.com/producername/beatname" },
-        { value: "comment", label: "Comment on beat", validationExample: "https://beatstars.com/producername/beatname" },
-        { value: "share", label: "Share beat", validationExample: "https://beatstars.com/producername/beatname" },
-        { value: "add_playlist", label: "+ Add to playlist", validationExample: "https://beatstars.com/producername/beatname" },
-        { value: "repost", label: "Repost beat", validationExample: "https://beatstars.com/producername/beatname" },
-    ],
-    Roblox: [
-        { value: "follow", label: "Follow user", validationExample: "https://roblox.com/users/username" },
-        { value: "favorite_game", label: "Favorite game", validationExample: "https://roblox.com/games/gameid" },
-        { value: "like_game", label: "Like game", validationExample: "https://roblox.com/games/gameid" },
-        { value: "join_group", label: "Join group", validationExample: "https://roblox.com/groups/groupid" },
-        { value: "vote_model", label: "Vote on model/asset", validationExample: "https://roblox.com/catalog/modelid" },
-        { value: "favorite_model", label: "Favorite model/asset", validationExample: "https://roblox.com/catalog/modelid" },
-        { value: "comment_group", label: "Comment on group", validationExample: "https://roblox.com/groups/groupid" },
-    ],
-    Other: [
-        { value: "visit", label: "Visit Website", validationExample: "https://example.com" },
-    ],
-};
-
-function getActionTypeOptions(platform: string): { value: string; label: string; validationExample: string }[] {
-    return ACTION_TYPE_OPTIONS[platform] || ACTION_TYPE_OPTIONS["Other"];
-}
+import { FaChevronLeft, FaRegImage, FaRegQuestionCircle, FaLock, FaPlus, FaTrash } from "react-icons/fa";
+import { PLATFORM_OPTIONS, getActionTypeOptions, URL_VALIDATORS } from "@/lib/constants";
 
 interface UnlockAction {
     platform: string;
@@ -155,59 +12,27 @@ interface UnlockAction {
     url: string;
 }
 
-// Validation regexes for each platform/action
-const URL_VALIDATORS: { [key: string]: (url: string) => boolean } = {
-    'Discord:join_server': url => /^https:\/\/(discord\.gg|discord\.com\/invite)\/[\w-]+$/i.test(url),
-    'YouTube:subscribe': url => /^https:\/\/youtube\.com\/channel\/[\w-]+$/i.test(url),
-    'YouTube:subscribe_notify': url => /^https:\/\/youtube\.com\/channel\/[\w-]+$/i.test(url),
-    'YouTube:like': url => /^https:\/\/youtube\.com\/watch\?v=[\w-]+$/i.test(url),
-    'YouTube:comment': url => /^https:\/\/youtube\.com\/watch\?v=[\w-]+$/i.test(url),
-    'YouTube:like_comment': url => /^https:\/\/youtube\.com\/watch\?v=[\w-]+$/i.test(url),
-    'YouTube:vote': url => /^https:\/\/youtube\.com\/post\/[\w-]+$/i.test(url),
-    'YouTube:share': url => /^https:\/\/youtube\.com\/watch\?v=[\w-]+$/i.test(url),
-    'Instagram:follow': url => /^https:\/\/instagram\.com\/[\w_.]+$/i.test(url),
-    'Instagram:like': url => /^https:\/\/instagram\.com\/p\/[\w-]+$/i.test(url),
-    'Instagram:comment': url => /^https:\/\/instagram\.com\/p\/[\w-]+$/i.test(url),
-    'Instagram:share': url => /^https:\/\/instagram\.com\/p\/[\w-]+$/i.test(url),
-    'X:follow': url => /^https:\/\/x\.com\/[\w_]+$/i.test(url),
-    'X:like': url => /^https:\/\/x\.com\/[\w_]+\/status\/[\d]+$/i.test(url),
-    'X:comment': url => /^https:\/\/x\.com\/[\w_]+\/status\/[\d]+$/i.test(url),
-    'X:repost': url => /^https:\/\/x\.com\/[\w_]+\/status\/[\d]+$/i.test(url),
-    'TikTok:follow': url => /^https:\/\/tiktok\.com\/@[\w_.]+$/i.test(url),
-    'TikTok:like': url => /^https:\/\/tiktok\.com\/@[\w_.]+\/video\/[\d]+$/i.test(url),
-    'TikTok:comment': url => /^https:\/\/tiktok\.com\/@[\w_.]+\/video\/[\d]+$/i.test(url),
-    'TikTok:share': url => /^https:\/\/tiktok\.com\/@[\w_.]+\/video\/[\d]+$/i.test(url),
-    'Facebook:like_page': url => /^https:\/\/facebook\.com\/[\w.]+$/i.test(url),
-    'Facebook:like_post': url => /^https:\/\/facebook\.com\/[\w.]+\/posts\/[\d]+$/i.test(url),
-    'Facebook:react': url => /^https:\/\/facebook\.com\/[\w.]+\/posts\/[\d]+$/i.test(url),
-    'Facebook:comment': url => /^https:\/\/facebook\.com\/[\w.]+\/posts\/[\d]+$/i.test(url),
-    'Facebook:share': url => /^https:\/\/facebook\.com\/[\w.]+\/posts\/[\d]+$/i.test(url),
-    'Other:visit': url => /^https?:\/\//i.test(url),
-    // Add more as needed for other platforms/actions
-};
-
-export default function CreateLinkPage() {
-    const [cover, setCover] = useState<File | null>(null);
-    const [coverPreview, setCoverPreview] = useState<string>("");
+export default function CreatePage() {
+    const router = useRouter();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [url, setUrl] = useState("");
-    const [notRobot, setNotRobot] = useState(false);
+    const [destinationUrl, setDestinationUrl] = useState("");
+    const [unlockActions, setUnlockActions] = useState<UnlockAction[]>([
+        { platform: "YouTube", type: "subscribe", label: "Subscribe to channel", url: "" }
+    ]);
+    const [coverImage, setCoverImage] = useState<File | null>(null);
+    const [coverPreview, setCoverPreview] = useState<string>("");
+    const [dragActive, setDragActive] = useState(false);
+    const [urlErrors, setUrlErrors] = useState<{ [idx: number]: string }>({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [dragActive, setDragActive] = useState(false);
-    const router = useRouter();
+    const [notRobot, setNotRobot] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [unlockActions, setUnlockActions] = useState<UnlockAction[]>([
-        { platform: "Other", type: "visit", label: "Visit Website", url: "" },
-    ]);
-    const [destinationUrl, setDestinationUrl] = useState("");
-    const [urlErrors, setUrlErrors] = useState<{ [idx: number]: string }>({});
 
     function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (file) {
-            setCover(file);
+            setCoverImage(file);
             setCoverPreview(URL.createObjectURL(file));
         }
     }
@@ -225,7 +50,7 @@ export default function CreateLinkPage() {
         setDragActive(false);
         const file = e.dataTransfer.files?.[0];
         if (file) {
-            setCover(file);
+            setCoverImage(file);
             setCoverPreview(URL.createObjectURL(file));
         }
     }
@@ -288,7 +113,7 @@ export default function CreateLinkPage() {
             formData.append("description", description);
             formData.append("unlockActions", JSON.stringify(unlockActions));
             formData.append("destinationUrl", destinationUrl);
-            if (cover) formData.append("cover", cover);
+            if (coverImage) formData.append("cover", coverImage);
             const res = await fetch("/api/links", {
                 method: "POST",
                 body: formData,
@@ -375,7 +200,6 @@ export default function CreateLinkPage() {
                 <div className="mb-2">
                     <div className="font-semibold text-gray-300 mb-2 flex items-center gap-2">UNLOCK ACTIONS</div>
                     {unlockActions.map((action, idx) => {
-                        
                         return (
                             <div key={idx} className="flex flex-col gap-3 mb-4 bg-[#181c1b] p-4 rounded-xl border border-gray-700 relative">
                                 <div className="flex items-center gap-3">
@@ -441,7 +265,7 @@ export default function CreateLinkPage() {
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                     <input type="checkbox" id="not-robot" checked={notRobot} onChange={e => setNotRobot(e.target.checked)} className="accent-green-500 w-5 h-5 rounded border-2 border-gray-600 focus:ring-2 focus:ring-green-400 transition" />
-                    <label htmlFor="not-robot" className="text-gray-300 text-base select-none cursor-pointer font-medium">I’m not a robot</label>
+                    <label htmlFor="not-robot" className="text-gray-300 text-base select-none cursor-pointer font-medium">I&apos;m not a robot</label>
                 </div>
                 {error && <div className="text-red-500 font-medium mt-2">{error}</div>}
                 <button type="submit" className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white font-bold shadow-lg hover:from-green-600 hover:to-purple-600 transition disabled:opacity-60 mt-2 text-lg tracking-wide" disabled={loading || !notRobot}>{loading ? "Creating..." : "Create Link"}</button>
@@ -457,7 +281,7 @@ export default function CreateLinkPage() {
                     <div className="w-full flex flex-col gap-2 mt-2">
                         {unlockActions.map((action, idx) => {
                             const platform = PLATFORM_OPTIONS.find(p => p.value === action.platform);
-                            const IconComponent = platform?.icon || FaGlobe;
+                            const IconComponent = platform?.icon || FaRegImage;
                             return (
                                 <div key={idx} className={`flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2 ${platform?.color || 'bg-gray-600'}`}>
                                     <IconComponent className="text-lg" />
@@ -466,7 +290,7 @@ export default function CreateLinkPage() {
                             );
                         })}
                     </div>
-                    <button className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold flex items-center justify-center gap-2 mt-2 cursor-not-allowed opacity-70" disabled><FaLock /> Unlock content</button>
+                    <button className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold shadow hover:from-blue-600 hover:to-purple-600 transition text-center text-lg flex items-center justify-center gap-2 mt-2 cursor-not-allowed opacity-70" disabled><FaLock /> Unlock content</button>
                 </div>
                 <button className="mt-6 px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-base font-semibold shadow hover:from-blue-600 hover:to-purple-600 transition">Preview Mode</button>
             </div>

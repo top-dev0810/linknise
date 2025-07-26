@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FaLock, FaUnlock, FaGlobe } from "react-icons/fa";
-import { PLATFORM_OPTIONS } from "../dashboard/create/page";
+import { PLATFORM_OPTIONS } from "@/lib/constants";
 
 interface UnlockAction {
     platform: string;
