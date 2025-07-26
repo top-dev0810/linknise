@@ -55,19 +55,19 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
         >
             <div className="w-full flex flex-col gap-2">
                 {unlockActions.map((action, idx) => (
-                    <div key={idx} className="flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2">
-                        <span className="text-xs font-semibold text-gray-300">{action.label}</span>
-                        <a
-                            href={action.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-400 underline break-all"
-                            onClick={() => handleActionComplete(idx)}
-                        >
+                    <a
+                        href={action.url}
+                        target="_blank"
+                        key={idx}
+                        rel="noopener noreferrer"
+                        onClick={() => handleActionComplete(idx)}
+                    >
+                        <div  className="flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2">
+                            <span className="text-xs font-semibold text-gray-300">{action.label}</span>
                             {action.url}
-                        </a>
-                        {completed[idx] && <span className="text-green-400 text-xs ml-2">Completed</span>}
-                    </div>
+                            {completed[idx] && <span className="text-green-400 text-xs ml-2">Completed</span>}
+                        </div>
+                    </a>
                 ))}
             </div>
             <div className="flex items-center gap-2">
