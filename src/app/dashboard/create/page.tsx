@@ -375,8 +375,7 @@ export default function CreateLinkPage() {
                 <div className="mb-2">
                     <div className="font-semibold text-gray-300 mb-2 flex items-center gap-2">UNLOCK ACTIONS</div>
                     {unlockActions.map((action, idx) => {
-                        const platform = PLATFORM_OPTIONS.find(p => p.value === action.platform);
-                        const IconComponent = platform?.icon || FaGlobe;
+                        
                         return (
                             <div key={idx} className="flex flex-col gap-3 mb-4 bg-[#181c1b] p-4 rounded-xl border border-gray-700 relative">
                                 <div className="flex items-center gap-3">
@@ -458,8 +457,10 @@ export default function CreateLinkPage() {
                     <div className="w-full flex flex-col gap-2 mt-2">
                         {unlockActions.map((action, idx) => {
                             const platform = PLATFORM_OPTIONS.find(p => p.value === action.platform);
+                            const IconComponent = platform?.icon || FaGlobe;
                             return (
                                 <div key={idx} className={`flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2 ${platform?.color || 'bg-gray-600'}`}>
+                                    <IconComponent className="text-lg" />
                                     <span className="text-xs font-semibold text-gray-300">{action.label}</span>
                                 </div>
                             );
