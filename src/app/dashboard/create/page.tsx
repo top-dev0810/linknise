@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaChevronLeft, FaRegImage, FaRegQuestionCircle, FaLock, FaPlus, FaTrash, FaDiscord, FaYoutube, FaInstagram, FaTwitter, FaTiktok, FaFacebook, FaTelegram, FaSpotify, FaTwitch, FaReddit, FaGlobe } from "react-icons/fa";
 
-const PLATFORM_OPTIONS = [
+export const PLATFORM_OPTIONS = [
     { value: "YouTube", label: "YouTube", icon: FaYoutube, color: "bg-red-600" },
     { value: "Instagram", label: "Instagram", icon: FaInstagram, color: "bg-pink-600" },
     { value: "X", label: "X", icon: FaTwitter, color: "bg-black" },
@@ -24,7 +24,7 @@ const PLATFORM_OPTIONS = [
     { value: "Other", label: "Other", icon: FaGlobe, color: "bg-gray-600" },
 ];
 
-const ACTION_TYPE_OPTIONS: {
+ const ACTION_TYPE_OPTIONS: {
     [key: string]: { value: string; label: string; validationExample: string }[];
     YouTube: { value: string; label: string; validationExample: string }[];
     Instagram: { value: string; label: string; validationExample: string }[];
