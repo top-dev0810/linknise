@@ -91,6 +91,7 @@ export const authOptions = {
                 (session.user as { id?: string }).id = (token as { id?: string }).id;
                 (session.user as { username?: string }).username = (token as { username?: string }).username;
                 (session.user as { bio?: string }).bio = (token as { bio?: string }).bio;
+                session.user.image = token.image as string | null;
             }
             return session;
         },
@@ -102,13 +103,14 @@ export const authOptions = {
                 token.email = user.email;
             }
 
-            // Fetch user data to include bio in token
+            // Fetch user data to include bio and image in token
             if (token.email) {
                 await dbConnect();
                 const dbUser = await User.findOne({ email: token.email });
                 if (dbUser) {
                     (token as { username?: string }).username = dbUser.username;
                     (token as { bio?: string }).bio = dbUser.bio;
+                    token.image = dbUser.image;
                 }
             }
 
