@@ -122,14 +122,21 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                 })}
             </div>
             <div className="flex items-center gap-3 bg-[#181c1b] rounded-lg px-4 py-3 border border-[#232b45]">
-                <input
-                    type="checkbox"
-                    id="not-robot"
-                    checked={notRobot}
-                    onChange={e => setNotRobot(e.target.checked)}
-                    className="w-4 h-4 text-green-500 bg-transparent border-2 border-green-500 rounded focus:ring-green-500 focus:ring-2 cursor-pointer"
-                />
-                <label htmlFor="not-robot" className="text-white text-sm sm:text-base select-none cursor-pointer font-medium">
+                <div
+                    onClick={() => setNotRobot(!notRobot)}
+                    className={`w-4 h-4 border-2 border-green-500 rounded flex items-center justify-center cursor-pointer transition-colors ${notRobot ? 'bg-green-500' : 'bg-transparent'
+                        }`}
+                >
+                    {notRobot && (
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                    )}
+                </div>
+                <label
+                    onClick={() => setNotRobot(!notRobot)}
+                    className="text-white text-sm sm:text-base select-none cursor-pointer font-medium"
+                >
                     I&apos;m not a robot
                 </label>
             </div>

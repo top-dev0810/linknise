@@ -284,8 +284,24 @@ export default function CreatePage() {
                     <label htmlFor="destinationUrl" className="absolute left-3 sm:left-4 top-2 sm:top-3 text-gray-400 text-xs sm:text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-2 sm:peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs sm:peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter destination URL *</label>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
-                    <input type="checkbox" id="not-robot" checked={notRobot} onChange={e => setNotRobot(e.target.checked)} className="accent-green-500 w-4 h-4 sm:w-5 sm:h-5 rounded border-2 border-gray-600 focus:ring-2 focus:ring-green-400 transition" />
-                    <label htmlFor="not-robot" className="text-gray-300 text-sm sm:text-base select-none cursor-pointer font-medium">I&apos;m not a robot</label>
+                    <div
+                        onClick={() => setNotRobot(!notRobot)}
+                        className={`w-4 h-4 sm:w-5 sm:h-5 border-2 border-green-500 rounded flex items-center justify-center cursor-pointer transition-colors ${
+                            notRobot ? 'bg-green-500' : 'bg-transparent'
+                        }`}
+                    >
+                        {notRobot && (
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                        )}
+                    </div>
+                    <label
+                        onClick={() => setNotRobot(!notRobot)}
+                        className="text-gray-300 text-sm sm:text-base select-none cursor-pointer font-medium"
+                    >
+                        I&apos;m not a robot
+                    </label>
                 </div>
                 {error && <div className="text-red-500 font-medium mt-2 text-sm sm:text-base">{error}</div>}
                 <button type="submit" className="w-full px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white font-bold shadow-lg hover:from-green-600 hover:to-purple-600 transition disabled:opacity-60 mt-2 text-base sm:text-lg tracking-wide" disabled={loading || !notRobot}>{loading ? "Creating..." : "Create Link"}</button>
