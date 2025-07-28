@@ -8,6 +8,7 @@ export interface IUnlockAction {
     validationType?: string; // e.g., 'click', 'visit', 'api', etc.
 }
 
+
 export interface ILink extends Document {
     destinationUrl: string;
     title: string;
