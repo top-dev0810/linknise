@@ -92,6 +92,7 @@ export const authOptions = {
                 (session.user as { username?: string }).username = (token as { username?: string }).username;
                 (session.user as { bio?: string }).bio = (token as { bio?: string }).bio;
                 session.user.image = token.image as string | null;
+                (session.user as { createdAt?: string }).createdAt = (token as { createdAt?: string }).createdAt;
             }
             return session;
         },
@@ -111,6 +112,7 @@ export const authOptions = {
                     (token as { username?: string }).username = dbUser.username;
                     (token as { bio?: string }).bio = dbUser.bio;
                     token.image = dbUser.image;
+                    (token as { createdAt?: string }).createdAt = dbUser.createdAt?.toISOString();
                 }
             }
 
