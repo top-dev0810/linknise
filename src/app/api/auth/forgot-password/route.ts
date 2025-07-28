@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       await user.save();
       await sendMail({
         to: email,
-        subject: "Your LinkUnlocker Password Reset Code",
+        subject: "Your Linknise Password Reset Code",
         html: `<div style='font-family:sans-serif;font-size:1.1rem'><p>Your password reset code is:</p><h2 style='color:#6c47ff;letter-spacing:2px;'>${resetCode}</h2><p>This code will expire in 10 minutes.</p></div>`,
         text: `Your password reset code is: ${resetCode}`,
       });

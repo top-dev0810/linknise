@@ -21,7 +21,7 @@ export default function AuthNav() {
     return (
       <nav className="w-full flex items-center justify-between px-4 sm:px-6 py-4 bg-white/80 dark:bg-gray-900/80 shadow-md fixed top-0 left-0 z-50 backdrop-blur-md">
         <Link href="/" className="text-xl sm:text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-          LinkUnlocker
+          Linknise
         </Link>
         <div className="flex items-center">
           <button
@@ -48,7 +48,7 @@ export default function AuthNav() {
   return (
     <nav className="w-full flex items-center justify-between px-4 sm:px-6 py-4 bg-white/80 dark:bg-gray-900/80 shadow-md fixed top-0 left-0 z-50 backdrop-blur-md">
       <Link href="/" className="text-xl sm:text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-        LinkUnlocker
+        Linknise
       </Link>
 
       {/* Desktop Menu */}

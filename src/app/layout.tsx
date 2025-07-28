@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LinkUnlocker",
+  title: "Linknise",
   description: "Unlock-to-access platform for sharing links with SEO and user profiles",
 };
 

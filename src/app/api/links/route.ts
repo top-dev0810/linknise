@@ -51,13 +51,13 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.user?.email) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     await dbConnect();
-    
+
     const user = await User.findOne({ email: session.user.email });
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -89,17 +89,17 @@ export async function POST(request: NextRequest) {
     if (coverFile) {
       const bytes = await coverFile.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      
+
       // Save to temp file
       const tempPath = join(tmpdir(), `cover-${Date.now()}.${coverFile.name.split('.').pop()}`);
       await writeFile(tempPath, buffer);
-      
+
       // Upload to Cloudinary
       const uploadResult = await cloudinary.v2.uploader.upload(tempPath, {
-        folder: "linkunlocker/covers",
+        folder: "linkunlockerlinkunlocker/covers",
         resource_type: "image",
       });
-      
+
       coverImage = uploadResult.secure_url;
     }
 
@@ -114,9 +114,9 @@ export async function POST(request: NextRequest) {
       unlocks: 0,
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: "Link created successfully",
-      linkId: link._id 
+      linkId: link._id
     }, { status: 201 });
 
   } catch (error) {

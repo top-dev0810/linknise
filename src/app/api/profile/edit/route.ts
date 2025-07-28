@@ -18,13 +18,13 @@ cloudinary.v2.config({
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.user?.email) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     await dbConnect();
-    
+
     const user = await User.findOne({ email: session.user.email });
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -59,11 +59,11 @@ export async function POST(request: NextRequest) {
       try {
         const bytes = await imageFile.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        
+
         // Save to temp file
         const tempPath = join(tmpdir(), `profile-${Date.now()}.${imageFile.name.split('.').pop()}`);
         await writeFile(tempPath, buffer);
-        
+
         // Upload to Cloudinary
         const uploadResult = await cloudinary.v2.uploader.upload(tempPath, {
           folder: "linkunlocker/profiles",
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
             { width: 400, height: 400, crop: "fill", gravity: "face" }
           ]
         });
-        
+
         imageUrl = uploadResult.secure_url;
       } catch (error) {
         console.error("Error uploading image:", error);

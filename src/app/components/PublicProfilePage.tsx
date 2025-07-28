@@ -29,6 +29,33 @@ function formatDate(date?: Date) {
     return new Date(date).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
+function formatMemberSince(date?: Date) {
+    if (!date) return "";
+    const joinDate = new Date(date);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - joinDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
+
+    let duration = "";
+    if (diffYears > 0) {
+        duration = `${diffYears} year${diffYears > 1 ? 's' : ''}`;
+    } else if (diffMonths > 0) {
+        duration = `${diffMonths} month${diffMonths > 1 ? 's' : ''}`;
+    } else {
+        duration = `${diffDays} day${diffDays > 1 ? 's' : ''}`;
+    }
+
+    return {
+        date: joinDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long"
+        }),
+        duration: duration
+    };
+}
+
 export default function PublicProfilePage({ username }: { username: string }) {
     const { data: session } = useSession();
     const router = useRouter();
@@ -143,6 +170,7 @@ export default function PublicProfilePage({ username }: { username: string }) {
 
     const joinDate = user?.createdAt ? new Date(user.createdAt).toLocaleString("default", { month: "long", year: "numeric" }) : "";
     const lastActive = links[0]?.createdAt ? formatDate(links[0].createdAt) : joinDate;
+    const memberSince = formatMemberSince(user?.createdAt);
 
     return (
         <>
@@ -161,9 +189,21 @@ export default function PublicProfilePage({ username }: { username: string }) {
                             <h1 className="text-2xl sm:text-3xl font-bold text-white">{user?.name || "Unnamed User"}</h1>
                             <div className="text-base sm:text-lg text-gray-400 font-mono">@{user?.username || "user"}</div>
                             <div className="text-gray-400 text-sm sm:text-base">{user?.bio || "This user hasn't added a bio yet."}</div>
+
+                            {/* Member Since Section */}
+                            {memberSince && (
+                                <div className="flex flex-col gap-1 mt-3 p-3 bg-[#232b45]/50 rounded-lg border border-[#232b45]/30">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                                        <span className="text-green-400 text-xs sm:text-sm font-semibold">Member since {memberSince.date}</span>
+                                    </div>
+                                    <div className="text-gray-400 text-xs">
+                                        Active for {memberSince.duration}
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 text-gray-400 text-xs sm:text-sm mt-2">
-                                <span>Joined {joinDate}</span>
-                                <span className="hidden sm:inline">•</span>
                                 <span>Last active {lastActive}</span>
                             </div>
                         </div>
@@ -174,7 +214,7 @@ export default function PublicProfilePage({ username }: { username: string }) {
                                 <FaEye size={16} />
                             </LinkNext>
                             <CopyButton
-                                text={`https://linkunlocker.com/public?username=${user?.username || "user"}`}
+                                text={`https://linkunlocker.vercel.app/public?username=${user?.username || "user"}`}
                                 className="bg-[#232b45] p-2 rounded-lg"
                                 title="Copy profile URL"
                             />

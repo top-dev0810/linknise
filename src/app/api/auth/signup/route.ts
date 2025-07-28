@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     // Send email with code
     await sendMail({
       to: email,
-      subject: "Your LinkUnlocker Verification Code",
+      subject: "Your Linknise Verification Code",
       html: `<div style='font-family:sans-serif;font-size:1.1rem'><p>Your verification code is:</p><h2 style='color:#6c47ff;letter-spacing:2px;'>${verifyCode}</h2><p>This code will expire in 10 minutes.</p></div>`,
       text: `Your verification code is: ${verifyCode}`,
     });

@@ -26,7 +26,7 @@ export default function ContentPolicyModal({ isOpen, onClose }: ContentPolicyMod
                     {/* Introduction */}
                     <div>
                         <p className="text-gray-300 text-sm mb-4">
-                            LinkUnlocker is committed to maintaining a safe and respectful platform for all users. 
+                            Linknise is committed to maintaining a safe and respectful platform for all users.
                             Please review our content policy to ensure your content complies with our guidelines.
                         </p>
                     </div>
@@ -98,7 +98,7 @@ export default function ContentPolicyModal({ isOpen, onClose }: ContentPolicyMod
                     <div className="border-t border-[#232b45] pt-6">
                         <h3 className="text-white font-semibold mb-3">Reporting Violations</h3>
                         <p className="text-gray-400 text-sm">
-                            If you encounter content that violates our policy, please report it immediately. 
+                            If you encounter content that violates our policy, please report it immediately.
                             We review all reports and take appropriate action to maintain a safe platform.
                         </p>
                     </div>

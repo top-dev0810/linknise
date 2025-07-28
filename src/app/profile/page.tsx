@@ -13,6 +13,33 @@ interface ExtendedUser {
   createdAt?: string;
 }
 
+function formatMemberSince(date?: string) {
+  if (!date) return null;
+  const joinDate = new Date(date);
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - joinDate.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  let duration = "";
+  if (diffYears > 0) {
+    duration = `${diffYears} year${diffYears > 1 ? 's' : ''}`;
+  } else if (diffMonths > 0) {
+    duration = `${diffMonths} month${diffMonths > 1 ? 's' : ''}`;
+  } else {
+    duration = `${diffDays} day${diffDays > 1 ? 's' : ''}`;
+  }
+
+  return {
+    date: joinDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long"
+    }),
+    duration: duration
+  };
+}
+
 export default function ProfilePage() {
   const { data: session } = useSession();
 
@@ -95,18 +122,27 @@ export default function ProfilePage() {
                   <FaCalendar className="text-gray-400 text-sm sm:text-base" />
                   <div>
                     <p className="text-xs sm:text-sm text-gray-400">Member Since</p>
-                    <p className="text-white text-sm sm:text-base">
-                      {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown"}
-                    </p>
+                    {user.createdAt ? (
+                      <div className="flex flex-col gap-1">
+                        <p className="text-white text-sm sm:text-base">
+                          {formatMemberSince(user.createdAt)?.date}
+                        </p>
+                        <p className="text-green-400 text-xs">
+                          Active for {formatMemberSince(user.createdAt)?.duration}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-white text-sm sm:text-base">Unknown</p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <FaLink className="text-gray-400 text-sm sm:text-base" />
                   <div>
                     <p className="text-xs sm:text-sm text-gray-400">Profile URL</p>
-                    <p className="text-blue-400 text-sm sm:text-base">
-                      {user.username ? `linkunlocker.com/public?username=${user.username}` : "Not set"}
-                    </p>
+                    <Link href={`/public?username=${user.username}`} className="text-blue-400 text-sm sm:text-base">
+                      {user.username ? `linkunlocker.vercel.app/public?username=${user.username}` : "Not set"}
+                    </Link>
                   </div>
                 </div>
               </div>
