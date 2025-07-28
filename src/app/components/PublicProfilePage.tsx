@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import LinkNext from "next/link";
 import Image from "next/image";
 import CopyButton from "@/components/CopyButton";
 import UsernameGenerator from "@/components/UsernameGenerator";
 import { IUser } from "@/lib/user.model";
 import { ILink } from "@/lib/link.model";
-import { FaSearch, FaFilter, FaEye, FaPlus } from "react-icons/fa";
+import { FaSearch, FaFilter, FaEye, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 type SessionUser = {
     name?: string | null;
@@ -30,6 +31,7 @@ function formatDate(date?: Date) {
 
 export default function PublicProfilePage({ username }: { username: string }) {
     const { data: session } = useSession();
+    const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<IUser | null>(null);
     const [links, setLinks] = useState<ILink[]>([]);
@@ -40,6 +42,45 @@ export default function PublicProfilePage({ username }: { username: string }) {
     const [status, setStatus] = useState("all");
     const [sort, setSort] = useState("newest");
     const [showFilters, setShowFilters] = useState(false);
+
+    // Edit/Delete state
+    const [deletingLink, setDeletingLink] = useState<string | null>(null);
+    const [deleteError, setDeleteError] = useState("");
+
+    // Handle Edit
+    const handleEdit = (linkId: string) => {
+        router.push(`/dashboard/edit/${linkId}`);
+    };
+
+    // Handle Delete
+    const handleDelete = async (linkId: string) => {
+        if (!confirm("Are you sure you want to delete this link? This action cannot be undone.")) {
+            return;
+        }
+
+        setDeletingLink(linkId);
+        setDeleteError("");
+
+        try {
+            const res = await fetch(`/api/links/${linkId}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+
+            if (res.ok) {
+                // Remove the link from the local state
+                setLinks(prevLinks => prevLinks.filter(link => getIdString(link._id) !== linkId));
+            } else {
+                const data = await res.json();
+                setDeleteError(data.message || "Failed to delete link");
+            }
+        } catch (err) {
+            console.error("Error deleting link:", err);
+            setDeleteError("Failed to delete link");
+        } finally {
+            setDeletingLink(null);
+        }
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -203,6 +244,13 @@ export default function PublicProfilePage({ username }: { username: string }) {
                         </div>
                     </div>
 
+                    {/* Error Display */}
+                    {deleteError && (
+                        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                            <div className="text-red-400 text-sm font-medium">{deleteError}</div>
+                        </div>
+                    )}
+
                     {/* Content Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                         {filteredLinks.map((link) => {
@@ -229,8 +277,23 @@ export default function PublicProfilePage({ username }: { username: string }) {
                                             {/* Edit/Delete for owner only */}
                                             {isOwner && (
                                                 <div className="flex gap-2">
-                                                    <button className="text-xs text-blue-400 hover:underline">Edit</button>
-                                                    <button className="text-xs text-red-400 hover:underline">Delete</button>
+                                                    <button
+                                                        onClick={() => handleEdit(idStr)}
+                                                        className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                                                        title="Edit link"
+                                                    >
+                                                        <FaEdit size={10} />
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(idStr)}
+                                                        disabled={deletingLink === idStr}
+                                                        className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 transition-colors disabled:opacity-50"
+                                                        title="Delete link"
+                                                    >
+                                                        <FaTrash size={10} />
+                                                        {deletingLink === idStr ? "Deleting..." : "Delete"}
+                                                    </button>
                                                 </div>
                                             )}
                                         </div>
