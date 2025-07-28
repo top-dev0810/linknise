@@ -29,7 +29,7 @@ export default function AuthNav() {
     username?: string | null;
   };
   const user = session.user as UserWithUsername;
-  const username = user.username || user.name || user.email;
+  const username = user?.username || user?.name || user?.email || "guest";
 
   return (
     <div className="flex items-center gap-3">

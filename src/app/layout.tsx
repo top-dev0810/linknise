@@ -35,7 +35,7 @@ export default async function RootLayout({
     username?: string | null;
   };
   const user = session?.user as UserWithUsername;
-  const username = user.username || user.name || user.email;
+  const username = user?.username || user?.name || user?.email || "guest";
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>

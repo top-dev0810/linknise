@@ -17,7 +17,7 @@ export const PLATFORM_OPTIONS = [
     { value: "Reddit", label: "Reddit", icon: FaReddit, color: "bg-orange-500" },
     { value: "Beatstars", label: "Beatstars", icon: FaGlobe, color: "bg-purple-500" },
     { value: "Roblox", label: "Roblox", icon: FaGlobe, color: "bg-red-500" },
-    { value: "Other", label: "Other", icon: FaGlobe, color: "bg-gray-600" },
+    { value: "Website", label: "Visit Website", icon: FaGlobe, color: "bg-gray-600" },
 ];
 
 export const ACTION_TYPE_OPTIONS: {
@@ -38,7 +38,7 @@ export const ACTION_TYPE_OPTIONS: {
     Reddit: { value: string; label: string; validationExample: string }[];
     Beatstars: { value: string; label: string; validationExample: string }[];
     Roblox: { value: string; label: string; validationExample: string }[];
-    Other: { value: string; label: string; validationExample: string }[];
+    Website: { value: string; label: string; validationExample: string }[];
 } = {
     YouTube: [
         { value: "subscribe", label: "Subscribe to channel", validationExample: "https://youtube.com/channel/UC..." },
@@ -135,13 +135,13 @@ export const ACTION_TYPE_OPTIONS: {
         { value: "favorite_model", label: "Favorite model/asset", validationExample: "https://roblox.com/catalog/modelid" },
         { value: "comment_group", label: "Comment on group", validationExample: "https://roblox.com/groups/groupid" },
     ],
-    Other: [
+    Website: [
         { value: "visit", label: "Visit Website", validationExample: "https://example.com" },
     ],
 };
 
 export function getActionTypeOptions(platform: string): { value: string; label: string; validationExample: string }[] {
-    return ACTION_TYPE_OPTIONS[platform] || ACTION_TYPE_OPTIONS["Other"];
+    return ACTION_TYPE_OPTIONS[platform] || ACTION_TYPE_OPTIONS["Website"];
 }
 
 // Validation regexes for each platform/action
@@ -171,6 +171,6 @@ export const URL_VALIDATORS: { [key: string]: (url: string) => boolean } = {
     'Facebook:react': url => /^https:\/\/facebook\.com\/[\w.]+\/posts\/[\d]+$/i.test(url),
     'Facebook:comment': url => /^https:\/\/facebook\.com\/[\w.]+\/posts\/[\d]+$/i.test(url),
     'Facebook:share': url => /^https:\/\/facebook\.com\/[\w.]+\/posts\/[\d]+$/i.test(url),
-    'Other:visit': url => /^https?:\/\//i.test(url),
+    'Website:visit': url => /^https?:\/\//i.test(url),
     // Add more as needed for other platforms/actions
 }; 

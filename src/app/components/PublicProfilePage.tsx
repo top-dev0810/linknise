@@ -74,7 +74,7 @@ export default function PublicProfilePage({ username }: { username: string }) {
     }
 
     // Determine if the current user is the owner
-    const isOwner = (session?.user as SessionUser)?.username === user.username || (session?.user as SessionUser)?.email === user.email;
+    const isOwner = (session?.user as SessionUser)?.username === user?.username || (session?.user as SessionUser)?.email === user?.email;
 
     // Filter/sort links
     let filteredLinks = links.filter((link) =>
@@ -107,7 +107,7 @@ export default function PublicProfilePage({ username }: { username: string }) {
                         </div>
                         <div className="flex-1 flex flex-col gap-2">
                             <h1 className="text-3xl font-bold text-white">{user?.name || "Unnamed User"}</h1>
-                            <div className="text-lg text-gray-400 font-mono">@{user.username}</div>
+                            <div className="text-lg text-gray-400 font-mono">@{user?.username || "user"}</div>
                             <div className="text-gray-400 text-base">{user?.bio || "This user hasn't added a bio yet."}</div>
                             <div className="flex gap-6 text-gray-400 text-sm mt-2">
                                 <span>Joined {joinDate}</span>
@@ -116,14 +116,14 @@ export default function PublicProfilePage({ username }: { username: string }) {
                             </div>
                         </div>
                         <div className="absolute top-6 right-6 flex gap-2">
-                            <LinkNext href={`/${user.username}`} className="bg-[#232b45] p-2 rounded-lg text-gray-300 hover:text-green-400 transition" title="View public profile">
+                            <LinkNext href={`/${user?.username || "user"}`} className="bg-[#232b45] p-2 rounded-lg text-gray-300 hover:text-green-400 transition" title="View public profile">
                                 <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                                     <circle cx="12" cy="12" r="3" />
                                 </svg>
                             </LinkNext>
                             <CopyButton
-                                text={`https://linkunlocker.com/${user.username}`}
+                                text={`https://linkunlocker.com/${user?.username || "user"}`}
                                 className="bg-[#232b45] p-2 rounded-lg"
                                 title="Copy profile URL"
                             />

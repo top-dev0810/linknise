@@ -18,7 +18,7 @@ export default function CreatePage() {
     const [description, setDescription] = useState("");
     const [destinationUrl, setDestinationUrl] = useState("");
     const [unlockActions, setUnlockActions] = useState<UnlockAction[]>([
-        { platform: "YouTube", type: "subscribe", label: "Subscribe to channel", url: "" }
+        { platform: "Website", type: "visit", label: "Visit Website", url: "" }
     ]);
     const [coverImage, setCoverImage] = useState<File | null>(null);
     const [coverPreview, setCoverPreview] = useState<string>("");
@@ -90,7 +90,7 @@ export default function CreatePage() {
     function addUnlockAction() {
         setUnlockActions(actions => [
             ...actions,
-            { platform: "Other", type: "visit", label: "Visit Website", url: "" },
+            { platform: "Website", type: "visit", label: "Visit Website", url: "" },
         ]);
         setUrlErrors(errors => ({ ...errors, [unlockActions.length]: "" }));
     }

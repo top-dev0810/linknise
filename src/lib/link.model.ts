@@ -16,6 +16,8 @@ export interface ILink extends Document {
     unlockActions: IUnlockAction[];
     creator: Types.ObjectId;
     unlockedBy: Types.ObjectId[];
+    views?: number;
+    unlocks?: number;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -40,6 +42,8 @@ const LinkSchema: Schema<ILink> = new Schema(
         unlockActions: { type: [UnlockActionSchema], required: true },
         creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
         unlockedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        views: { type: Number, default: 0 },
+        unlocks: { type: Number, default: 0 },
     },
     { timestamps: true }
 );
