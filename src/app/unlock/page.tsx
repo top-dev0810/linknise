@@ -12,10 +12,6 @@ interface UnlockAction {
     url: string;
 }
 
-interface Creator {
-    name?: string;
-    email?: string;
-}
 
 interface LinkData {
     unlockActions: UnlockAction[];
@@ -75,8 +71,6 @@ function UnlockPageContent() {
             })
             .then(data => {
                 setLink(data.link);
-                setCreator(data.creator);
-                setCreatorLinksCount(data.creatorLinksCount);
                 setLoading(false);
 
                 // Track the view after successful load
