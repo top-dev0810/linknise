@@ -159,12 +159,11 @@ function UnlockPageContent() {
                             <FaEye className="text-gray-400" />
                             {link.views || 0} views
                         </span>
-                        {link.unlocks && (
-                            <span className="flex items-center gap-1">
-                                <FaUnlock className="text-gray-400" />
-                                {link.unlocks} unlocks
-                            </span>
-                        )}
+
+                        <span className="flex items-center gap-1">
+                            <FaUnlock className="text-gray-400" />
+                            {link.unlocks || 0} unlocks
+                        </span>
                     </div>
                     {creator?.username && (
                         <a
@@ -175,6 +174,29 @@ function UnlockPageContent() {
                         </a>
                     )}
                 </div>
+
+                {/* Creator Profile Section */}
+                {creator && (
+                    <div className="w-full flex items-center gap-3 p-3 bg-[#232b45]/30 rounded-lg border border-[#232b45]/50">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold border-2 border-green-400 overflow-hidden">
+                            {creator.image ? (
+                                <Image
+                                    src={creator.image}
+                                    alt={creator.name || "Creator"}
+                                    width={40}
+                                    height={40}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <span>{creator.name?.[0] || creator.username?.[0] || "U"}</span>
+                            )}
+                        </div>
+                        <div className="flex-1">
+                            <div className="text-white font-medium">{creator.username}</div>
+                            <div className="text-gray-400 text-xs">1 post</div>
+                        </div>
+                    </div>
+                )}
 
                 <UnlockClient unlockActions={link.unlockActions} destinationUrl={link.destinationUrl} />
             </div>

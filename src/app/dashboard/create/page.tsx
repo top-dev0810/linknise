@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaChevronLeft, FaRegImage, FaRegQuestionCircle, FaLock, FaPlus, FaTrash } from "react-icons/fa";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 import HowItWorksModal from "@/app/components/HowItWorksModal";
 import ContentPolicyModal from "@/app/components/ContentPolicyModal";
 import { PLATFORM_OPTIONS, getActionTypeOptions, URL_VALIDATORS } from "@/lib/constants";
@@ -28,9 +29,10 @@ export default function CreatePage() {
     const [urlErrors, setUrlErrors] = useState<{ [idx: number]: string }>({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [notRobot, setNotRobot] = useState(false);
     const [showHowItWorks, setShowHowItWorks] = useState(false);
     const [showContentPolicy, setShowContentPolicy] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+    const captchaRef = useRef<HCaptcha>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -107,8 +109,26 @@ export default function CreatePage() {
         });
     }
 
+    function onCaptchaVerify(token: string) {
+        setCaptchaToken(token);
+    }
+
+    function onCaptchaExpire() {
+        setCaptchaToken(null);
+    }
+
+    function onCaptchaError() {
+        setCaptchaToken(null);
+    }
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+
+        if (!captchaToken) {
+            setError("Please complete the security verification");
+            return;
+        }
+
         setLoading(true);
         setError("");
         try {
@@ -283,28 +303,21 @@ export default function CreatePage() {
                     <input type="url" id="destinationUrl" className="peer w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-transparent text-sm sm:text-base" placeholder="Enter destination URL *" value={destinationUrl} onChange={e => setDestinationUrl(e.target.value)} required />
                     <label htmlFor="destinationUrl" className="absolute left-3 sm:left-4 top-2 sm:top-3 text-gray-400 text-xs sm:text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-2 sm:peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs sm:peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter destination URL *</label>
                 </div>
-                <div className="flex items-center gap-2 mt-2">
-                    <div
-                        onClick={() => setNotRobot(!notRobot)}
-                        className={`w-4 h-4 sm:w-5 sm:h-5 border-2 border-green-500 rounded flex items-center justify-center cursor-pointer transition-colors ${
-                            notRobot ? 'bg-green-500' : 'bg-transparent'
-                        }`}
-                    >
-                        {notRobot && (
-                            <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                        )}
-                    </div>
-                    <label
-                        onClick={() => setNotRobot(!notRobot)}
-                        className="text-gray-300 text-sm sm:text-base select-none cursor-pointer font-medium"
-                    >
-                        I&apos;m not a robot
-                    </label>
+
+                {/* CAPTCHA Section */}
+                <div className="w-full flex justify-center">
+                    <HCaptcha
+                        ref={captchaRef}
+                        sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || "10000000-ffff-ffff-ffff-000000000001"}
+                        onVerify={onCaptchaVerify}
+                        onExpire={onCaptchaExpire}
+                        onError={onCaptchaError}
+                        theme="dark"
+                    />
                 </div>
+
                 {error && <div className="text-red-500 font-medium mt-2 text-sm sm:text-base">{error}</div>}
-                <button type="submit" className="w-full px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white font-bold shadow-lg hover:from-green-600 hover:to-purple-600 transition disabled:opacity-60 mt-2 text-base sm:text-lg tracking-wide" disabled={loading || !notRobot}>{loading ? "Creating..." : "Create Link"}</button>
+                <button type="submit" className="w-full px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white font-bold shadow-lg hover:from-green-600 hover:to-purple-600 transition disabled:opacity-60 mt-2 text-base sm:text-lg tracking-wide" disabled={loading || !captchaToken}>{loading ? "Creating..." : "Create Link"}</button>
             </form>
             {/* Right: Live Preview */}
             <div className="flex-1 flex flex-col items-center justify-center">

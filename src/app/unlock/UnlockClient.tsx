@@ -16,7 +16,6 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
     const linkId = searchParams?.get('id');
     const [completed, setCompleted] = useState<boolean[]>(unlockActions.map(() => false));
     const [unlocked, setUnlocked] = useState(false);
-    const [notRobot, setNotRobot] = useState(false);
     const [tracking, setTracking] = useState(false);
 
     async function handleActionComplete(idx: number) {
@@ -66,7 +65,7 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
         }
     }
 
-    const allComplete = completed.every(Boolean) && notRobot;
+    const allComplete = completed.every(Boolean);
     const completedCount = completed.filter(Boolean).length;
 
     if (unlocked) {
@@ -105,40 +104,32 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                     const platform = PLATFORM_OPTIONS.find(p => p.value === action.platform);
                     const IconComponent = platform?.icon || FaGlobe;
                     return (
-                        <a
-                            href={action.url}
-                            target="_blank"
-                            key={idx}
-                            rel="noopener noreferrer"
-                            onClick={() => handleActionComplete(idx)}
-                        >
-                            <div className={`flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2 ${platform?.color || 'bg-gray-600'}`}>
-                                <IconComponent className="text-base sm:text-lg" />
-                                <span className="text-xs font-semibold text-gray-300">{action.label}</span>
-                                {completed[idx] && <span className="text-green-400 text-xs ml-2">Completed</span>}
-                            </div>
-                        </a>
+                        <div key={idx} className="flex flex-col gap-2">
+                            <a
+                                href={action.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => handleActionComplete(idx)}
+                            >
+                                <div className={`flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2 ${platform?.color || 'bg-gray-600'}`}>
+                                    <IconComponent className="text-base sm:text-lg" />
+                                    <span className="text-xs font-semibold text-gray-300">{action.label}</span>
+                                    {completed[idx] && <span className="text-green-400 text-xs ml-2">Completed</span>}
+                                </div>
+                            </a>
+                            {/* Special button for server owners */}
+                            {action.platform === "Discord" && action.type === "join" && (
+                                <button
+                                    type="button"
+                                    onClick={() => handleActionComplete(idx)}
+                                    className="text-xs text-blue-400 hover:text-blue-300 underline"
+                                >
+                                    I&apos;m already a member of this server
+                                </button>
+                            )}
+                        </div>
                     );
                 })}
-            </div>
-            <div className="flex items-center gap-3 bg-[#181c1b] rounded-lg px-4 py-3 border border-[#232b45]">
-                <div
-                    onClick={() => setNotRobot(!notRobot)}
-                    className={`w-4 h-4 border-2 border-green-500 rounded flex items-center justify-center cursor-pointer transition-colors ${notRobot ? 'bg-green-500' : 'bg-transparent'
-                        }`}
-                >
-                    {notRobot && (
-                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                    )}
-                </div>
-                <label
-                    onClick={() => setNotRobot(!notRobot)}
-                    className="text-white text-sm sm:text-base select-none cursor-pointer font-medium"
-                >
-                    I&apos;m not a robot
-                </label>
             </div>
             <div className="w-full text-xs text-gray-400 text-right">{completedCount}/{unlockActions.length} actions completed</div>
             <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
