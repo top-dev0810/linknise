@@ -121,15 +121,15 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                     );
                 })}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3 bg-[#181c1b] rounded-lg px-4 py-3 border border-[#232b45]">
                 <input
                     type="checkbox"
                     id="not-robot"
                     checked={notRobot}
                     onChange={e => setNotRobot(e.target.checked)}
-                    className="accent-green-500 w-4 h-4"
+                    className="w-4 h-4 text-green-500 bg-transparent border-2 border-green-500 rounded focus:ring-green-500 focus:ring-2 cursor-pointer"
                 />
-                <label htmlFor="not-robot" className="text-gray-300 text-xs sm:text-sm select-none cursor-pointer">
+                <label htmlFor="not-robot" className="text-white text-sm sm:text-base select-none cursor-pointer font-medium">
                     I&apos;m not a robot
                 </label>
             </div>
