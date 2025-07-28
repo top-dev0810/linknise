@@ -3,6 +3,8 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaChevronLeft, FaRegImage, FaRegQuestionCircle, FaLock, FaPlus, FaTrash } from "react-icons/fa";
+import HowItWorksModal from "@/app/components/HowItWorksModal";
+import ContentPolicyModal from "@/app/components/ContentPolicyModal";
 import { PLATFORM_OPTIONS, getActionTypeOptions, URL_VALIDATORS } from "@/lib/constants";
 
 interface UnlockAction {
@@ -27,6 +29,8 @@ export default function CreatePage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [notRobot, setNotRobot] = useState(false);
+    const [showHowItWorks, setShowHowItWorks] = useState(false);
+    const [showContentPolicy, setShowContentPolicy] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -160,10 +164,26 @@ export default function CreatePage() {
                 </button>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 mt-2 gap-2">
                     <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Create Unlock Link</h2>
-                    <button type="button" className="flex items-center gap-1 text-green-400 bg-[#232b45] px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold shadow hover:bg-green-500/10 transition" title="Learn how unlock links work"><FaRegQuestionCircle /> How It Works</button>
+                    <button
+                        type="button"
+                        onClick={() => setShowHowItWorks(true)}
+                        className="flex items-center gap-1 text-green-400 bg-[#232b45] px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold shadow hover:bg-green-500/10 transition"
+                        title="Learn how unlock links work"
+                    >
+                        <FaRegQuestionCircle /> How It Works
+                    </button>
                 </div>
                 <div className="mb-2">
-                    <div className="text-xs text-gray-400 mb-1 font-medium">Content Policy Violations</div>
+                    <div className="flex items-center justify-between mb-1">
+                        <div className="text-xs text-gray-400 font-medium">Content Policy Violations</div>
+                        <button
+                            type="button"
+                            onClick={() => setShowContentPolicy(true)}
+                            className="text-xs text-blue-400 hover:text-blue-300 font-medium"
+                        >
+                            View Policy
+                        </button>
+                    </div>
                     <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 transition-all duration-500" style={{ width: `${(policyProgress / policyTotal) * 100}%` }} />
                     </div>
@@ -294,6 +314,18 @@ export default function CreatePage() {
                 </div>
                 <button className="mt-4 sm:mt-6 px-4 sm:px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm sm:text-base font-semibold shadow hover:from-blue-600 hover:to-purple-600 transition">Preview Mode</button>
             </div>
+
+            {/* How It Works Modal */}
+            <HowItWorksModal
+                isOpen={showHowItWorks}
+                onClose={() => setShowHowItWorks(false)}
+            />
+
+            {/* Content Policy Modal */}
+            <ContentPolicyModal
+                isOpen={showContentPolicy}
+                onClose={() => setShowContentPolicy(false)}
+            />
         </div>
     );
 }

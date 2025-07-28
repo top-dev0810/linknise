@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
@@ -15,6 +15,14 @@ function SignInForm() {
     const router = useRouter();
     const params = useSearchParams();
     const signupSuccess = params?.get("signup") === "success";
+    const verifiedSuccess = params?.get("verified") === "success";
+    const emailParam = params?.get("email") || "";
+
+    useEffect(() => {
+        if (emailParam) {
+            setEmail(emailParam);
+        }
+    }, [emailParam]);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -59,6 +67,7 @@ function SignInForm() {
                     <hr className="flex-1 border-[#232b45]" />
                 </div>
                 {signupSuccess && <div className="text-green-500 text-xs sm:text-sm font-semibold w-full text-center">Signup successful! Please sign in.</div>}
+                {verifiedSuccess && <div className="text-green-500 text-xs sm:text-sm font-semibold w-full text-center">Email verified successfully! Please sign in with your password.</div>}
                 {error && <div className="text-red-500 text-xs sm:text-sm font-semibold w-full text-center">{error}</div>}
                 <div className="w-full flex flex-col gap-3 sm:gap-4">
                     <label className="flex flex-col gap-1 text-xs sm:text-sm text-white font-medium">

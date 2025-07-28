@@ -1,16 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 
 export default function VerifyForm() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const emailParam = searchParams?.get("email") || "";
-    const passwordParam = searchParams?.get("password") || "";
     const [email, setEmail] = useState(emailParam);
     const [code, setCode] = useState("");
-    const [password, setPassword] = useState(passwordParam);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
@@ -18,7 +15,6 @@ export default function VerifyForm() {
     const [codeSent, setCodeSent] = useState(!!emailParam);
     const [resendLoading, setResendLoading] = useState(false);
     const [resendMessage, setResendMessage] = useState("");
-    const [showPasswordInput, setShowPasswordInput] = useState(false);
 
     useEffect(() => {
         if (emailParam) {
@@ -33,11 +29,11 @@ export default function VerifyForm() {
         setLoading(true);
         setError("");
         setResendMessage("");
-        // Use forgot-password endpoint to send code
-        const res = await fetch("/api/auth/forgot-password", {
+        // Use signup endpoint to send verification code
+        const res = await fetch("/api/auth/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email, resend: true }),
         });
         setLoading(false);
         if (res.ok) {
@@ -54,10 +50,10 @@ export default function VerifyForm() {
         setResendLoading(true);
         setResendMessage("");
         setError("");
-        const res = await fetch("/api/auth/forgot-password", {
+        const res = await fetch("/api/auth/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email, resend: true }),
         });
         setResendLoading(false);
         if (res.ok) {
@@ -73,69 +69,42 @@ export default function VerifyForm() {
         setLoading(true);
         setError("");
         setSuccess(false);
+        
         const res = await fetch("/api/auth/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, code }),
         });
+        
         setLoading(false);
         if (res.ok) {
             setSuccess(true);
             setError("");
-            // Try to sign in automatically if password is available
-            if (password) {
-                setLoading(true);
-                const signInRes = await signIn("credentials", {
-                    email,
-                    password,
-                    redirect: false,
-                });
-                setLoading(false);
-                if (signInRes?.ok) {
-                    router.push("/dashboard");
-                } else {
-                    setError("Verification succeeded, but automatic sign in failed. Please sign in manually.");
-                }
-            } else {
-                setShowPasswordInput(true);
-            }
+            
+            // After successful verification, redirect to signin page with success message
+            setTimeout(() => {
+                router.push(`/auth/signin?verified=success&email=${encodeURIComponent(email)}`);
+            }, 1500);
         } else {
             const data = await res.json();
             setError(data.message || "Verification failed");
         }
     }
 
-    async function handlePasswordSignIn(e: React.FormEvent) {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
-        const signInRes = await signIn("credentials", {
-            email,
-            password,
-            redirect: false,
-        });
-        setLoading(false);
-        if (signInRes?.ok) {
-            router.push("/dashboard");
-        } else {
-            setError("Sign in failed. Please check your password.");
-        }
-    }
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#10182a]">
+        <div className="min-h-screen flex items-center justify-center bg-[#10182a] px-4 sm:px-6">
             <form
-                onSubmit={codeSent && !showPasswordInput ? handleVerify : showPasswordInput ? handlePasswordSignIn : handleSendCode}
-                className="w-full max-w-md bg-[#181f32] rounded-2xl shadow-2xl p-8 flex flex-col gap-6 items-center border border-[#232b45]"
+                onSubmit={codeSent ? handleVerify : handleSendCode}
+                className="w-full max-w-sm sm:max-w-md bg-[#181f32] rounded-2xl shadow-2xl p-6 sm:p-8 flex flex-col gap-4 sm:gap-6 items-center border border-[#232b45]"
             >
-                <h1 className="text-3xl font-bold text-center text-white mb-2">Verify Your Email</h1>
-                <p className="text-gray-400 text-center mb-2">Enter the code sent to your email address.</p>
-                {success && !showPasswordInput && <div className="text-green-500 text-sm font-semibold w-full text-center">Email verified! Signing you in...</div>}
-                {error && <div className="text-red-500 text-sm font-semibold w-full text-center">{error}</div>}
-                {resendMessage && <div className="text-green-500 text-sm font-semibold w-full text-center">{resendMessage}</div>}
-                <div className="w-full flex flex-col gap-4">
+                <h1 className="text-2xl sm:text-3xl font-bold text-center text-white mb-2">Verify Your Email</h1>
+                <p className="text-gray-400 text-center mb-2 text-sm sm:text-base">Enter the verification code sent to your email address.</p>
+                {success && <div className="text-green-500 text-xs sm:text-sm font-semibold w-full text-center">Email verified! Redirecting to sign in...</div>}
+                {error && <div className="text-red-500 text-xs sm:text-sm font-semibold w-full text-center">{error}</div>}
+                {resendMessage && <div className="text-green-500 text-xs sm:text-sm font-semibold w-full text-center">{resendMessage}</div>}
+                <div className="w-full flex flex-col gap-3 sm:gap-4">
                     {showEmailInput && (
-                        <label className="flex flex-col gap-1 text-sm text-white font-medium">
+                        <label className="flex flex-col gap-1 text-xs sm:text-sm text-white font-medium">
                             Email address
                             <input
                                 type="email"
@@ -143,12 +112,12 @@ export default function VerifyForm() {
                                 onChange={e => setEmail(e.target.value)}
                                 required
                                 placeholder="you@email.com"
-                                className="w-full px-4 py-2 rounded-md bg-[#232b45] border border-[#232b45] text-white placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                className="w-full px-3 sm:px-4 py-2 rounded-md bg-[#232b45] border border-[#232b45] text-white placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary transition text-sm sm:text-base"
                             />
                         </label>
                     )}
-                    {codeSent && !showPasswordInput && (
-                        <label className="flex flex-col gap-1 text-sm text-white font-medium">
+                    {codeSent && (
+                        <label className="flex flex-col gap-1 text-xs sm:text-sm text-white font-medium">
                             Verification Code
                             <input
                                 type="text"
@@ -156,20 +125,7 @@ export default function VerifyForm() {
                                 onChange={e => setCode(e.target.value)}
                                 required
                                 placeholder="6-digit code"
-                                className="w-full px-4 py-2 rounded-md bg-[#232b45] border border-[#232b45] text-white placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary transition"
-                            />
-                        </label>
-                    )}
-                    {showPasswordInput && (
-                        <label className="flex flex-col gap-1 text-sm text-white font-medium">
-                            Password
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                required
-                                placeholder="Enter your password to sign in"
-                                className="w-full px-4 py-2 rounded-md bg-[#232b45] border border-[#232b45] text-white placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                className="w-full px-3 sm:px-4 py-2 rounded-md bg-[#232b45] border border-[#232b45] text-white placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary transition text-sm sm:text-base"
                             />
                         </label>
                     )}
@@ -178,17 +134,17 @@ export default function VerifyForm() {
                     <button
                         type="submit"
                         disabled={loading || !email}
-                        className="w-full py-3 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-lg shadow hover:from-purple-500 hover:to-blue-500 transition disabled:opacity-60 mt-2"
+                        className="w-full py-2.5 sm:py-3 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-base sm:text-lg shadow hover:from-purple-500 hover:to-blue-500 transition disabled:opacity-60 mt-2"
                     >
                         {loading ? "Sending..." : "Send Code"}
                     </button>
                 )}
-                {codeSent && !showPasswordInput && (
+                {codeSent && (
                     <>
                         <button
                             type="submit"
                             disabled={loading || !code}
-                            className="w-full py-3 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-lg shadow hover:from-purple-500 hover:to-blue-500 transition disabled:opacity-60 mt-2"
+                            className="w-full py-2.5 sm:py-3 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-base sm:text-lg shadow hover:from-purple-500 hover:to-blue-500 transition disabled:opacity-60 mt-2"
                         >
                             {loading ? "Verifying..." : "Verify Email"}
                         </button>
@@ -196,20 +152,11 @@ export default function VerifyForm() {
                             type="button"
                             onClick={handleResendCode}
                             disabled={resendLoading}
-                            className="w-full py-2 rounded-md bg-[#232b45] text-white font-semibold text-base border border-[#232b45] hover:bg-[#20263a] transition mt-2"
+                            className="w-full py-2 rounded-md bg-[#232b45] text-white font-semibold text-sm sm:text-base border border-[#232b45] hover:bg-[#20263a] transition mt-2"
                         >
                             {resendLoading ? "Resending..." : "Resend Code"}
                         </button>
                     </>
-                )}
-                {showPasswordInput && (
-                    <button
-                        type="submit"
-                        disabled={loading || !password}
-                        className="w-full py-3 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-lg shadow hover:from-purple-500 hover:to-blue-500 transition disabled:opacity-60 mt-2"
-                    >
-                        {loading ? "Signing in..." : "Sign In"}
-                    </button>
                 )}
             </form>
         </div>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/app/components/Providers";
@@ -16,7 +16,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "LinkUnlocker",
-  description: "Unlock-to-access platform for sharing links with SEO and user profiles.",
+  description: "Unlock-to-access platform for sharing links with SEO and user profiles",
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default async function RootLayout({
@@ -24,7 +31,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>

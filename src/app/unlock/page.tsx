@@ -30,8 +30,6 @@ function UnlockPageContent() {
     const searchParams = useSearchParams();
     const id = searchParams?.get('id');
     const [link, setLink] = useState<LinkData | null>(null);
-    const [creator, setCreator] = useState<Creator | null>(null);
-    const [creatorLinksCount, setCreatorLinksCount] = useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [viewTracked, setViewTracked] = useState(false);
@@ -146,15 +144,6 @@ function UnlockPageContent() {
                 {link.description && (
                     <p className="text-gray-400 text-center">{link.description}</p>
                 )}
-                <div className="flex items-center gap-3 mt-2 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-lg font-bold">
-                        {creator?.name?.[0] || creator?.email?.[0] || 'U'}
-                    </div>
-                    <div>
-                        <div className="font-semibold text-white">{creator?.name || 'Unnamed User'}</div>
-                        <div className="text-xs text-gray-400">{creatorLinksCount} {creatorLinksCount === 1 ? 'post' : 'posts'}</div>
-                    </div>
-                </div>
                 <UnlockClient unlockActions={link.unlockActions} destinationUrl={link.destinationUrl} />
             </div>
         </div>

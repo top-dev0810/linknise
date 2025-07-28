@@ -12,12 +12,38 @@
   --fantasy-glow: 0 0 16px 2px #a084ff, 0 0 32px 4px #ffb6ea;
 }
 
+/* Prevent zooming on input focus */
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
   font-family: 'Geist', Arial, Helvetica, sans-serif;
   transition: background 0.5s, color 0.5s;
+  /* Prevent zoom on input focus */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Ensure inputs don't cause zoom */
+input, textarea, select {
+  font-size: 16px !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Prevent zoom on iOS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
 }
 
 .glass-card {
