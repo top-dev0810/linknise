@@ -46,6 +46,8 @@ export default function PublicProfilePage({ username }: { username: string }) {
     // Edit/Delete state
     const [deletingLink, setDeletingLink] = useState<string | null>(null);
     const [deleteError, setDeleteError] = useState("");
+    const [selectedLink, setSelectedLink] = useState<ILink | null>(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     // Handle Edit
     const handleEdit = (linkId: string) => {
@@ -54,10 +56,6 @@ export default function PublicProfilePage({ username }: { username: string }) {
 
     // Handle Delete
     const handleDelete = async (linkId: string) => {
-        if (!confirm("Are you sure you want to delete this link? This action cannot be undone.")) {
-            return;
-        }
-
         setDeletingLink(linkId);
         setDeleteError("");
 
@@ -70,6 +68,8 @@ export default function PublicProfilePage({ username }: { username: string }) {
             if (res.ok) {
                 // Remove the link from the local state
                 setLinks(prevLinks => prevLinks.filter(link => getIdString(link._id) !== linkId));
+                setShowDeleteModal(false);
+                setSelectedLink(null);
             } else {
                 const data = await res.json();
                 setDeleteError(data.message || "Failed to delete link");
@@ -80,6 +80,12 @@ export default function PublicProfilePage({ username }: { username: string }) {
         } finally {
             setDeletingLink(null);
         }
+    };
+
+    // Handle Delete Confirmation
+    const handleDeleteClick = (link: ILink) => {
+        setSelectedLink(link);
+        setShowDeleteModal(true);
     };
 
     useEffect(() => {
@@ -286,13 +292,12 @@ export default function PublicProfilePage({ username }: { username: string }) {
                                                         Edit
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(idStr)}
-                                                        disabled={deletingLink === idStr}
-                                                        className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 transition-colors disabled:opacity-50"
+                                                        onClick={() => handleDeleteClick(link)}
+                                                        className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 transition-colors"
                                                         title="Delete link"
                                                     >
                                                         <FaTrash size={10} />
-                                                        {deletingLink === idStr ? "Deleting..." : "Delete"}
+                                                        Delete
                                                     </button>
                                                 </div>
                                             )}
@@ -320,6 +325,36 @@ export default function PublicProfilePage({ username }: { username: string }) {
                     )}
                 </div>
             </div>
-        </>
+        
+
+        {/* Delete Modal */ }
+    {
+        showDeleteModal && selectedLink && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-[#181c1b] rounded-2xl p-6 max-w-md w-full mx-4 border border-[#232b45]">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Delete Link</h3>
+                    <p className="text-gray-400 text-sm sm:text-base mb-6">
+                        Are you sure you want to delete &quot;{selectedLink.title}&quot;? This action cannot be undone.
+                    </p>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => setShowDeleteModal(false)}
+                            className="flex-1 px-3 sm:px-4 py-2 rounded-lg bg-gray-600 text-white font-semibold hover:bg-gray-700 transition text-sm sm:text-base"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={() => handleDelete(getIdString(selectedLink._id))}
+                            disabled={deletingLink === getIdString(selectedLink._id)}
+                            className="flex-1 px-3 sm:px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition text-sm sm:text-base disabled:opacity-50"
+                        >
+                            {deletingLink === getIdString(selectedLink._id) ? "Deleting..." : "Delete"}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+</>
     );
 } 
