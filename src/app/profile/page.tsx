@@ -105,7 +105,7 @@ export default function ProfilePage() {
                   <div>
                     <p className="text-sm text-gray-400">Profile URL</p>
                     <p className="text-blue-400">
-                      {user.username ? `linkunlocker.com/${user.username}` : "Not set"}
+                      {user.username ? `linkunlocker.com/public?username=${user.username}` : "Not set"}
                     </p>
                   </div>
                 </div>
