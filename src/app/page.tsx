@@ -1,6 +1,5 @@
 import { FaLock, FaChartLine, FaPalette, FaMoneyBillWave } from "react-icons/fa";
 import Link from "next/link";
-
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#10182a] via-[#181f32] to-[#0a0f1c] px-4 sm:px-6 py-8 sm:py-12">
@@ -42,12 +41,6 @@ export default function Home() {
           <FaMoneyBillWave className="text-2xl sm:text-3xl text-green-400 mb-3" />
           <h2 className="text-lg sm:text-xl font-bold text-white mb-1">Monetization</h2>
           <p className="text-gray-400 text-sm sm:text-base">Integrate with platforms for additional revenue and growth.</p>
-        </div>
-      </div>
-
-      <div className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6">
-        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#181f32] flex items-center justify-center border border-[#232b45] shadow">
-          <span className="text-white text-sm sm:text-lg font-bold">N</span>
         </div>
       </div>
     </main>

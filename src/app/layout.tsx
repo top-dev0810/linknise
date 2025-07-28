@@ -30,7 +30,7 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
         <Providers>
           <AuthNav />
-          <div className="min-h-screen">{children}</div>
+          <div className="pt-16 min-h-screen">{children}</div>
         </Providers>
       </body>
     </html>
