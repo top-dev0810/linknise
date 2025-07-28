@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import UnlockClient from './UnlockClient';
 
@@ -34,6 +34,28 @@ export default function UnlockPage() {
     const [creatorLinksCount, setCreatorLinksCount] = useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [viewTracked, setViewTracked] = useState(false);
+
+    const trackView = useCallback(async () => {
+        if (!id || viewTracked) return;
+
+        try {
+            await fetch('/api/link', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    linkId: id,
+                    actionIndex: -2, // Special code for view tracking
+                    completed: false,
+                }),
+            });
+            setViewTracked(true);
+        } catch (error) {
+            console.error('Error tracking view:', error);
+        }
+    }, [id, viewTracked]);
 
     useEffect(() => {
         if (!id) {
@@ -41,10 +63,10 @@ export default function UnlockPage() {
             setLoading(false);
             return;
         }
-        
+
         setLoading(true);
         setError(null);
-        
+
         fetch(`/api/link?id=${id}`)
             .then(async (res) => {
                 if (!res.ok) {
@@ -58,13 +80,18 @@ export default function UnlockPage() {
                 setCreator(data.creator);
                 setCreatorLinksCount(data.creatorLinksCount);
                 setLoading(false);
+
+                // Track the view after successful load
+                if (!viewTracked) {
+                    trackView();
+                }
             })
             .catch((err) => {
                 console.error('Error fetching link:', err);
                 setError(err.message || 'Failed to load link');
                 setLoading(false);
             });
-    }, [id]);
+    }, [id, viewTracked, trackView]);
 
     if (!id) {
         return (
@@ -107,12 +134,12 @@ export default function UnlockPage() {
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#10182a] via-[#181f32] to-[#0a0f1c] px-4 py-12">
             <div className="w-full max-w-xl mx-auto bg-[#181c1b] rounded-2xl shadow-xl p-8 border border-[#232b45] flex flex-col gap-6 items-center">
                 {link.coverImage && (
-                    <Image 
-                        src={link.coverImage} 
-                        alt="Cover" 
-                        width={640} 
-                        height={360} 
-                        className="rounded-lg w-full object-cover aspect-video" 
+                    <Image
+                        src={link.coverImage}
+                        alt="Cover"
+                        width={640}
+                        height={360}
+                        className="rounded-lg w-full object-cover aspect-video"
                     />
                 )}
                 <h1 className="text-3xl font-bold text-white text-center">{link.title}</h1>

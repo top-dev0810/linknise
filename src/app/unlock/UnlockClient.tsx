@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { FaLock, FaUnlock, FaGlobe } from "react-icons/fa";
 import { PLATFORM_OPTIONS } from "@/lib/constants";
 
@@ -11,12 +12,58 @@ interface UnlockAction {
 }
 
 export default function UnlockClient({ unlockActions, destinationUrl }: { unlockActions: UnlockAction[]; destinationUrl: string }) {
+    const searchParams = useSearchParams();
+    const linkId = searchParams?.get('id');
     const [completed, setCompleted] = useState<boolean[]>(unlockActions.map(() => false));
     const [unlocked, setUnlocked] = useState(false);
     const [notRobot, setNotRobot] = useState(false);
+    const [tracking, setTracking] = useState(false);
 
-    function handleActionComplete(idx: number) {
+    async function handleActionComplete(idx: number) {
         setCompleted(prev => prev.map((c, i) => (i === idx ? true : c)));
+
+        // Track the action completion in the database
+        try {
+            await fetch('/api/link', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    linkId,
+                    actionIndex: idx,
+                    completed: false, // Individual action completion
+                }),
+            });
+        } catch (error) {
+            console.error('Error tracking action:', error);
+        }
+    }
+
+    async function handleUnlock() {
+        if (!allComplete) return;
+
+        setTracking(true);
+        try {
+            // Track the final unlock in the database
+            await fetch('/api/link', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    linkId,
+                    actionIndex: -1, // Final unlock
+                    completed: true,
+                }),
+            });
+
+            setUnlocked(true);
+        } catch (error) {
+            console.error('Error tracking unlock:', error);
+        } finally {
+            setTracking(false);
+        }
     }
 
     const allComplete = completed.every(Boolean) && notRobot;
@@ -50,7 +97,7 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
         <form
             onSubmit={e => {
                 e.preventDefault();
-                if (allComplete) setUnlocked(true);
+                if (allComplete) handleUnlock();
             }}
             className="w-full flex flex-col items-center gap-4 mt-4"
         >
@@ -95,9 +142,18 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
             <button
                 type="submit"
                 className="w-full px-6 py-3 rounded-lg bg-gray-800 text-gray-400 font-bold flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
-                disabled={!allComplete}
+                disabled={!allComplete || tracking}
             >
-                <FaLock /> Unlock content
+                {tracking ? (
+                    <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Processing...
+                    </>
+                ) : (
+                    <>
+                        <FaLock /> Unlock content
+                    </>
+                )}
             </button>
         </form>
     );
