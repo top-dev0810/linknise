@@ -180,8 +180,18 @@ export default function PublicProfilePage({ username }: { username: string }) {
                 <div className="max-w-4xl mx-auto mb-6 sm:mb-10">
                     <div className="rounded-2xl bg-[#181c1b] shadow-xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6 sm:gap-8 border border-[#232b45] relative overflow-hidden">
                         {/* Profile Image */}
-                        <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-3xl sm:text-5xl font-bold border-4 border-green-400">
-                            {user?.name?.[0] || user?.email?.[0] || "U"}
+                        <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-3xl sm:text-5xl font-bold border-4 border-green-400 overflow-hidden">
+                            {user?.image ? (
+                                <Image
+                                    src={user.image}
+                                    alt={user?.name || "Profile"}
+                                    width={112}
+                                    height={112}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <span>{user?.name?.[0] || user?.email?.[0] || "U"}</span>
+                            )}
                         </div>
 
                         {/* Profile Info */}
