@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useCallback, Suspense } from 'react';
 import Image from 'next/image';
+import { FaEye, FaUnlock } from 'react-icons/fa';
 import UnlockClient from './UnlockClient';
 
 interface UnlockAction {
@@ -20,12 +21,23 @@ interface LinkData {
     description?: string;
     coverImage?: string;
     creator: string;
+    views?: number;
+    unlocks?: number;
+}
+
+interface CreatorData {
+    _id: string;
+    name?: string;
+    username?: string;
+    email?: string;
+    image?: string;
 }
 
 function UnlockPageContent() {
     const searchParams = useSearchParams();
     const id = searchParams?.get('id');
     const [link, setLink] = useState<LinkData | null>(null);
+    const [creator, setCreator] = useState<CreatorData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [viewTracked, setViewTracked] = useState(false);
@@ -71,6 +83,7 @@ function UnlockPageContent() {
             })
             .then(data => {
                 setLink(data.link);
+                setCreator(data.creator);
                 setLoading(false);
 
                 // Track the view after successful load
@@ -138,6 +151,31 @@ function UnlockPageContent() {
                 {link.description && (
                     <p className="text-gray-400 text-center">{link.description}</p>
                 )}
+
+                {/* Views and Creator Info */}
+                <div className="w-full flex items-center justify-between text-sm text-gray-400">
+                    <div className="flex items-center gap-2">
+                        <span className="flex items-center gap-1">
+                            <FaEye className="text-gray-400" />
+                            {link.views || 0} views
+                        </span>
+                        {link.unlocks && (
+                            <span className="flex items-center gap-1">
+                                <FaUnlock className="text-gray-400" />
+                                {link.unlocks} unlocks
+                            </span>
+                        )}
+                    </div>
+                    {creator?.username && (
+                        <a
+                            href={`/public?username=${creator.username}`}
+                            className="text-blue-400 hover:text-blue-300 transition-colors"
+                        >
+                            @{creator.username}
+                        </a>
+                    )}
+                </div>
+
                 <UnlockClient unlockActions={link.unlockActions} destinationUrl={link.destinationUrl} />
             </div>
         </div>
