@@ -2,8 +2,9 @@
 
 import { useSearchParams } from "next/navigation";
 import PublicProfilePage from "../components/PublicProfilePage";
+import { Suspense } from "react";
 
-export default function PublicPage() {
+function PublicPageContent() {
     const searchParams = useSearchParams();
     const username = searchParams?.get('username');
 
@@ -12,4 +13,12 @@ export default function PublicPage() {
     }
 
     return <PublicProfilePage username={username} />;
+}
+
+export default function PublicPage() {
+    return (
+        <Suspense fallback={<div className="text-center mt-10 text-gray-400">Loading...</div>}>
+            <PublicPageContent />
+        </Suspense>
+    );
 } 

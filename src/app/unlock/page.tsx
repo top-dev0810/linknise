@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import Image from 'next/image';
 import UnlockClient from './UnlockClient';
 
@@ -26,7 +26,7 @@ interface LinkData {
     creator: string;
 }
 
-export default function UnlockPage() {
+function UnlockPageContent() {
     const searchParams = useSearchParams();
     const id = searchParams?.get('id');
     const [link, setLink] = useState<LinkData | null>(null);
@@ -158,5 +158,21 @@ export default function UnlockPage() {
                 <UnlockClient unlockActions={link.unlockActions} destinationUrl={link.destinationUrl} />
             </div>
         </div>
+    );
+}
+
+export default function UnlockPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#10182a] via-[#181f32] to-[#0a0f1c] px-4 py-12">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
+                    <h2 className="text-xl font-semibold text-white mb-2">Loading...</h2>
+                    <p className="text-gray-400">Preparing your unlock content</p>
+                </div>
+            </div>
+        }>
+            <UnlockPageContent />
+        </Suspense>
     );
 } 
