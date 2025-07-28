@@ -1,6 +1,15 @@
+"use client";
 import { FaLock, FaChartLine, FaPalette, FaMoneyBillWave } from "react-icons/fa";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+
 export default function Home() {
+  const { data: session, status } = useSession();
+
+  // Determine the appropriate link based on session status
+  const getStartedLink = session ? "/dashboard" : "/auth/signup";
+  const getStartedText = session ? "Go to Dashboard" : "Get Started Free";
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#10182a] via-[#181f32] to-[#0a0f1c] px-4 sm:px-6 py-8 sm:py-12">
       <div className="text-center max-w-2xl mx-auto flex flex-col gap-4 sm:gap-6 mt-8 sm:mt-12">
@@ -14,9 +23,9 @@ export default function Home() {
           Gate your content behind social actions and watch your audience grow. <br className="hidden sm:block" />
           Create, share, and manage unlockable links with real-time analytics and beautiful, branded pages.
         </p>
-        <Link href="/auth/signup" className="inline-block">
+        <Link href={getStartedLink} className="inline-block">
           <button className="px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-base sm:text-lg shadow-lg hover:from-blue-600 hover:to-purple-600 transition">
-            Get Started Free
+            {status === "loading" ? "Loading..." : getStartedText}
           </button>
         </Link>
       </div>
