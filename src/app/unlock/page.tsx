@@ -85,18 +85,20 @@ function UnlockPageContent() {
                 setLink(data.link);
                 setCreator(data.creator);
                 setLoading(false);
-
-                // Track the view after successful load
-                if (!viewTracked) {
-                    trackView();
-                }
             })
             .catch((err) => {
                 console.error('Error fetching link:', err);
                 setError(err.message || 'Failed to load link');
                 setLoading(false);
             });
-    }, [id, viewTracked, trackView]);
+    }, [id]);
+
+    // Track view separately after link is loaded
+    useEffect(() => {
+        if (link && !viewTracked) {
+            trackView();
+        }
+    }, [link, viewTracked, trackView]);
 
     if (!id) {
         return (
@@ -165,14 +167,7 @@ function UnlockPageContent() {
                             {link.unlocks || 0} unlocks
                         </span>
                     </div>
-                    {creator?.username && (
-                        <a
-                            href={`/public?username=${creator.username}`}
-                            className="text-blue-400 hover:text-blue-300 transition-colors"
-                        >
-                            @{creator.username}
-                        </a>
-                    )}
+                    
                 </div>
 
                 {/* Creator Profile Section */}
@@ -192,7 +187,14 @@ function UnlockPageContent() {
                             )}
                         </div>
                         <div className="flex-1">
-                            <div className="text-white font-medium">{creator.username}</div>
+                            {creator?.username && (
+                                <a
+                                    href={`/public?username=${creator.username}`}
+                                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                                >
+                                    @{creator.username}
+                                </a>
+                            )}
                             <div className="text-gray-400 text-xs">1 post</div>
                         </div>
                     </div>
