@@ -123,11 +123,11 @@ export default function PublicProfilePage({ username }: { username: string }) {
 
                         {/* Action Buttons */}
                         <div className="absolute top-4 right-4 flex gap-2">
-                            <LinkNext href={`/${user?.username || "user"}`} className="bg-[#232b45] p-2 rounded-lg text-gray-300 hover:text-green-400 transition" title="View public profile">
+                            <LinkNext href={`/public?username=${user?.username || "user"}`} className="bg-[#232b45] p-2 rounded-lg text-gray-300 hover:text-green-400 transition" title="View public profile">
                                 <FaEye size={16} />
                             </LinkNext>
                             <CopyButton
-                                text={`https://linkunlocker.com/${user?.username || "user"}`}
+                                text={`https://linkunlocker.com/public?username=${user?.username || "user"}`}
                                 className="bg-[#232b45] p-2 rounded-lg"
                                 title="Copy profile URL"
                             />
