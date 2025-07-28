@@ -43,13 +43,13 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       if (response.ok) {
         const data = await response.json();
         setLinks(data.links || []);
-        
+
         // Calculate analytics
         const totalViews = data.links?.reduce((sum: number, link: ILink) => sum + (link.views || 0), 0) || 0;
         const totalUnlocks = data.links?.reduce((sum: number, link: ILink) => sum + (link.unlocks || 0), 0) || 0;
         const totalLinks = data.links?.length || 0;
         const conversionRate = totalViews > 0 ? ((totalUnlocks / totalViews) * 100) : 0;
-        
+
         setAnalytics({
           totalViews,
           totalUnlocks,
@@ -101,66 +101,66 @@ export default function DashboardClient({ user }: DashboardClientProps) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-gray-400">Welcome back, {user?.name || user?.email}!</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Dashboard</h1>
+          <p className="text-gray-400 text-sm sm:text-base">Welcome back, {user?.name || user?.email}!</p>
         </div>
         <Link href="/dashboard/create">
-          <button className="mt-4 md:mt-0 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold shadow-lg hover:from-green-600 hover:to-blue-600 transition flex items-center gap-2">
+          <button className="mt-4 sm:mt-0 px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold shadow-lg hover:from-green-600 hover:to-blue-600 transition flex items-center gap-2 text-sm sm:text-base">
             <FaPlus /> Create New Link
           </button>
         </Link>
       </div>
 
       {/* Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl p-6 border border-[#232b45]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-[#232b45]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-sm font-medium">Total Views</p>
-              <p className="text-2xl font-bold text-white">{analytics.totalViews.toLocaleString()}</p>
+              <p className="text-gray-400 text-xs sm:text-sm font-medium">Total Views</p>
+              <p className="text-xl sm:text-2xl font-bold text-white">{analytics.totalViews.toLocaleString()}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-              <FaEye className="text-blue-400 text-xl" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+              <FaEye className="text-blue-400 text-lg sm:text-xl" />
             </div>
           </div>
         </div>
 
-        <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl p-6 border border-[#232b45]">
+        <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-[#232b45]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-sm font-medium">Total Unlocks</p>
-              <p className="text-2xl font-bold text-white">{analytics.totalUnlocks.toLocaleString()}</p>
+              <p className="text-gray-400 text-xs sm:text-sm font-medium">Total Unlocks</p>
+              <p className="text-xl sm:text-2xl font-bold text-white">{analytics.totalUnlocks.toLocaleString()}</p>
             </div>
-            <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-              <FaUnlock className="text-green-400 text-xl" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+              <FaUnlock className="text-green-400 text-lg sm:text-xl" />
             </div>
           </div>
         </div>
 
-        <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl p-6 border border-[#232b45]">
+        <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-[#232b45]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-sm font-medium">Active Links</p>
-              <p className="text-2xl font-bold text-white">{analytics.totalLinks}</p>
+              <p className="text-gray-400 text-xs sm:text-sm font-medium">Active Links</p>
+              <p className="text-xl sm:text-2xl font-bold text-white">{analytics.totalLinks}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-              <FaLink className="text-purple-400 text-xl" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+              <FaLink className="text-purple-400 text-lg sm:text-xl" />
             </div>
           </div>
         </div>
 
-        <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl p-6 border border-[#232b45]">
+        <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-[#232b45]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-sm font-medium">Conversion Rate</p>
-              <p className="text-2xl font-bold text-white">{analytics.conversionRate}%</p>
+              <p className="text-gray-400 text-xs sm:text-sm font-medium">Conversion Rate</p>
+              <p className="text-xl sm:text-2xl font-bold text-white">{analytics.conversionRate}%</p>
             </div>
-            <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
-              <FaChartLine className="text-orange-400 text-xl" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
+              <FaChartLine className="text-orange-400 text-lg sm:text-xl" />
             </div>
           </div>
         </div>
@@ -168,19 +168,19 @@ export default function DashboardClient({ user }: DashboardClientProps) {
 
       {/* Links Section */}
       <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-2xl border border-[#232b45] overflow-hidden">
-        <div className="p-6 border-b border-[#232b45]">
-          <h2 className="text-xl font-bold text-white">Your Links</h2>
+        <div className="p-4 sm:p-6 border-b border-[#232b45]">
+          <h2 className="text-lg sm:text-xl font-bold text-white">Your Links</h2>
         </div>
 
         {links.length === 0 ? (
-          <div className="p-12 text-center">
-            <div className="w-16 h-16 bg-gray-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FaLink className="text-gray-400 text-2xl" />
+          <div className="p-8 sm:p-12 text-center">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FaLink className="text-gray-400 text-xl sm:text-2xl" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">No links yet</h3>
-            <p className="text-gray-400 mb-6">Create your first unlock link to start growing your audience</p>
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-2">No links yet</h3>
+            <p className="text-gray-400 text-sm sm:text-base mb-6">Create your first unlock link to start growing your audience</p>
             <Link href="/dashboard/create">
-              <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold shadow-lg hover:from-green-600 hover:to-blue-600 transition flex items-center gap-2 mx-auto">
+              <button className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold shadow-lg hover:from-green-600 hover:to-blue-600 transition flex items-center gap-2 mx-auto text-sm sm:text-base">
                 <FaPlus /> Create Your First Link
               </button>
             </Link>
@@ -188,10 +188,10 @@ export default function DashboardClient({ user }: DashboardClientProps) {
         ) : (
           <div className="divide-y divide-[#232b45]">
             {links.map((link) => (
-              <div key={link._id?.toString()} className="p-6 hover:bg-[#232b45]/20 transition-colors">
+              <div key={link._id?.toString()} className="p-4 sm:p-6 hover:bg-[#232b45]/20 transition-colors">
                 <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                   {/* Link Image */}
-                  <div className="w-24 h-16 bg-[#232b45] rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="w-20 h-12 sm:w-24 sm:h-16 bg-[#232b45] rounded-lg overflow-hidden flex-shrink-0">
                     {link.coverImage ? (
                       <Image
                         src={link.coverImage}
@@ -202,16 +202,16 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <FaLink className="text-gray-500" />
+                        <FaLink className="text-gray-500 text-sm sm:text-base" />
                       </div>
                     )}
                   </div>
 
                   {/* Link Info */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-white mb-1 truncate">{link.title}</h3>
-                    <p className="text-gray-400 text-sm mb-2 line-clamp-2">{link.description}</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <h3 className="text-base sm:text-lg font-semibold text-white mb-1 truncate">{link.title}</h3>
+                    <p className="text-gray-400 text-xs sm:text-sm mb-2 line-clamp-2">{link.description}</p>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-gray-500">
                       <span className="flex items-center gap-1">
                         <FaEye /> {link.views || 0} views
                       </span>
@@ -225,26 +225,26 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                     <button
                       onClick={() => copyToClipboard(`${window.location.origin}/unlock?id=${link._id}`)}
-                      className="p-2 text-gray-400 hover:text-blue-400 transition-colors"
+                      className="p-1.5 sm:p-2 text-gray-400 hover:text-blue-400 transition-colors"
                       title="Copy link"
                     >
-                      <FaCopy />
+                      <FaCopy className="text-sm sm:text-base" />
                     </button>
                     <a
                       href={`/unlock?id=${link._id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 text-gray-400 hover:text-green-400 transition-colors"
+                      className="p-1.5 sm:p-2 text-gray-400 hover:text-green-400 transition-colors"
                       title="View link"
                     >
-                      <FaExternalLinkAlt />
+                      <FaExternalLinkAlt className="text-sm sm:text-base" />
                     </a>
                     <Link href={`/dashboard/edit/${link._id}`}>
-                      <button className="p-2 text-gray-400 hover:text-yellow-400 transition-colors" title="Edit link">
-                        <FaEdit />
+                      <button className="p-1.5 sm:p-2 text-gray-400 hover:text-yellow-400 transition-colors" title="Edit link">
+                        <FaEdit className="text-sm sm:text-base" />
                       </button>
                     </Link>
                     <button
@@ -252,10 +252,10 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                         setSelectedLink(link);
                         setShowDeleteModal(true);
                       }}
-                      className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+                      className="p-1.5 sm:p-2 text-gray-400 hover:text-red-400 transition-colors"
                       title="Delete link"
                     >
-                      <FaTrash />
+                      <FaTrash className="text-sm sm:text-base" />
                     </button>
                   </div>
                 </div>
@@ -267,22 +267,22 @@ export default function DashboardClient({ user }: DashboardClientProps) {
 
       {/* Delete Modal */}
       {showDeleteModal && selectedLink && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-[#181c1b] rounded-2xl p-6 max-w-md w-full mx-4 border border-[#232b45]">
-            <h3 className="text-xl font-bold text-white mb-4">Delete Link</h3>
-            <p className="text-gray-400 mb-6">
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Delete Link</h3>
+            <p className="text-gray-400 text-sm sm:text-base mb-6">
               Are you sure you want to delete &quot;{selectedLink.title}&quot;? This action cannot be undone.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-600 text-white font-semibold hover:bg-gray-700 transition"
+                className="flex-1 px-3 sm:px-4 py-2 rounded-lg bg-gray-600 text-white font-semibold hover:bg-gray-700 transition text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDelete(selectedLink._id?.toString() || "")}
-                className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                className="flex-1 px-3 sm:px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition text-sm sm:text-base"
               >
                 Delete
               </button>

@@ -8,6 +8,7 @@ import CopyButton from "@/components/CopyButton";
 import UsernameGenerator from "@/components/UsernameGenerator";
 import { IUser } from "@/lib/user.model";
 import { ILink } from "@/lib/link.model";
+import { FaSearch, FaFilter, FaEye, FaPlus } from "react-icons/fa";
 
 type SessionUser = {
     name?: string | null;
@@ -38,6 +39,7 @@ export default function PublicProfilePage({ username }: { username: string }) {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("all");
     const [sort, setSort] = useState("newest");
+    const [showFilters, setShowFilters] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -98,29 +100,31 @@ export default function PublicProfilePage({ username }: { username: string }) {
     return (
         <>
             {!user?.username && <UsernameGenerator />}
-            <div className="pt-18 min-h-screen bg-gradient-to-br from-[#10182a] via-[#181f32] to-[#0a0f1c] px-4 py-10">
+            <div className="pt-18 min-h-screen bg-gradient-to-br from-[#10182a] via-[#181f32] to-[#0a0f1c] px-4 py-6 sm:py-10">
                 {/* Profile Header */}
-                <div className="max-w-4xl mx-auto mb-10">
-                    <div className="rounded-2xl bg-[#181c1b] shadow-xl p-8 flex flex-col md:flex-row items-center gap-8 border border-[#232b45] relative overflow-hidden">
-                        <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-5xl font-bold border-4 border-green-400">
+                <div className="max-w-4xl mx-auto mb-6 sm:mb-10">
+                    <div className="rounded-2xl bg-[#181c1b] shadow-xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6 sm:gap-8 border border-[#232b45] relative overflow-hidden">
+                        {/* Profile Image */}
+                        <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-3xl sm:text-5xl font-bold border-4 border-green-400">
                             {user?.name?.[0] || user?.email?.[0] || "U"}
                         </div>
-                        <div className="flex-1 flex flex-col gap-2">
-                            <h1 className="text-3xl font-bold text-white">{user?.name || "Unnamed User"}</h1>
-                            <div className="text-lg text-gray-400 font-mono">@{user?.username || "user"}</div>
-                            <div className="text-gray-400 text-base">{user?.bio || "This user hasn't added a bio yet."}</div>
-                            <div className="flex gap-6 text-gray-400 text-sm mt-2">
+
+                        {/* Profile Info */}
+                        <div className="flex-1 flex flex-col gap-2 text-center md:text-left">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-white">{user?.name || "Unnamed User"}</h1>
+                            <div className="text-base sm:text-lg text-gray-400 font-mono">@{user?.username || "user"}</div>
+                            <div className="text-gray-400 text-sm sm:text-base">{user?.bio || "This user hasn't added a bio yet."}</div>
+                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 text-gray-400 text-xs sm:text-sm mt-2">
                                 <span>Joined {joinDate}</span>
-                                <span>•</span>
+                                <span className="hidden sm:inline">•</span>
                                 <span>Last active {lastActive}</span>
                             </div>
                         </div>
-                        <div className="absolute top-6 right-6 flex gap-2">
+
+                        {/* Action Buttons */}
+                        <div className="absolute top-4 right-4 flex gap-2">
                             <LinkNext href={`/${user?.username || "user"}`} className="bg-[#232b45] p-2 rounded-lg text-gray-300 hover:text-green-400 transition" title="View public profile">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                </svg>
+                                <FaEye size={16} />
                             </LinkNext>
                             <CopyButton
                                 text={`https://linkunlocker.com/${user?.username || "user"}`}
@@ -130,75 +134,127 @@ export default function PublicProfilePage({ username }: { username: string }) {
                         </div>
                     </div>
                 </div>
+
                 {/* Content Section */}
                 <div className="max-w-6xl mx-auto">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                        <div>
-                            <h2 className="text-2xl font-bold text-white mb-1">Content by {user?.name || "User"}</h2>
-                            <div className="text-gray-400 text-base">{filteredLinks.length} item{filteredLinks.length !== 1 && "s"}</div>
-                        </div>
-                        <div className="flex gap-2 items-center">
-                            <input
-                                type="text"
-                                placeholder="Search content..."
-                                className="px-4 py-2 rounded-lg bg-[#232b45] text-gray-200 border border-[#232b45] focus:outline-none focus:ring-2 focus:ring-green-500"
-                                value={search}
-                                onChange={e => setSearch(e.target.value)}
-                            />
-                            <select
-                                className="px-4 py-2 rounded-lg bg-[#232b45] text-gray-200 font-semibold border border-[#232b45] focus:outline-none focus:ring-2 focus:ring-green-500"
-                                value={status}
-                                onChange={e => setStatus(e.target.value)}
-                            >
-                                <option value="all">All Status</option>
-                                {/* Add more status options if you add status to links */}
-                            </select>
-                            <select
-                                className="px-4 py-2 rounded-lg bg-[#232b45] text-gray-200 font-semibold border border-[#232b45] focus:outline-none focus:ring-2 focus:ring-green-500"
-                                value={sort}
-                                onChange={e => setSort(e.target.value)}
-                            >
-                                <option value="newest">Newest</option>
-                                <option value="oldest">Oldest</option>
-                                <option value="title">Title</option>
-                            </select>
-                            <button className="px-3 py-2 rounded-lg bg-[#232b45] text-gray-200 font-semibold"><svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg></button>
-                            <button className="px-3 py-2 rounded-lg bg-[#232b45] text-gray-200 font-semibold"><svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+                    {/* Header and Controls */}
+                    <div className="flex flex-col gap-4 mb-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div>
+                                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Content by {user?.name || "User"}</h2>
+                                <div className="text-gray-400 text-sm sm:text-base">{filteredLinks.length} item{filteredLinks.length !== 1 && "s"}</div>
+                            </div>
+
+                            {/* Create Button for Owner */}
                             {isOwner && (
-                                <LinkNext href="/dashboard/create" className="ml-2 px-5 py-2 rounded-full bg-green-500 text-white font-bold text-base shadow hover:bg-green-600 transition flex items-center gap-2"><span>+ Create New Content</span></LinkNext>
+                                <LinkNext href="/dashboard/create" className="px-4 sm:px-5 py-2 sm:py-3 rounded-full bg-green-500 text-white font-bold text-sm sm:text-base shadow hover:bg-green-600 transition flex items-center justify-center gap-2">
+                                    <FaPlus size={14} />
+                                    <span>Create New Content</span>
+                                </LinkNext>
                             )}
                         </div>
+
+                        {/* Search and Filters */}
+                        <div className="flex flex-col gap-3">
+                            {/* Search Bar */}
+                            <div className="relative">
+                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                                <input
+                                    type="text"
+                                    placeholder="Search content..."
+                                    className="w-full pl-10 pr-4 py-2 sm:py-3 rounded-lg bg-[#232b45] text-gray-200 border border-[#232b45] focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
+                                    value={search}
+                                    onChange={e => setSearch(e.target.value)}
+                                />
+                            </div>
+
+                            {/* Filter Controls */}
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                <button
+                                    onClick={() => setShowFilters(!showFilters)}
+                                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[#232b45] text-gray-200 font-semibold border border-[#232b45] focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                                >
+                                    <FaFilter size={14} />
+                                    Filters
+                                </button>
+
+                                {showFilters && (
+                                    <div className="flex flex-col sm:flex-row gap-3 sm:ml-4">
+                                        <select
+                                            className="px-3 sm:px-4 py-2 rounded-lg bg-[#232b45] text-gray-200 font-semibold border border-[#232b45] focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                                            value={status}
+                                            onChange={e => setStatus(e.target.value)}
+                                        >
+                                            <option value="all">All Status</option>
+                                            {/* Add more status options if you add status to links */}
+                                        </select>
+                                        <select
+                                            className="px-3 sm:px-4 py-2 rounded-lg bg-[#232b45] text-gray-200 font-semibold border border-[#232b45] focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                                            value={sort}
+                                            onChange={e => setSort(e.target.value)}
+                                        >
+                                            <option value="newest">Newest</option>
+                                            <option value="oldest">Oldest</option>
+                                            <option value="title">Title</option>
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
+
                     {/* Content Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                         {filteredLinks.map((link) => {
                             const idStr = getIdString(link._id);
                             return (
                                 <div key={idStr} className="rounded-2xl bg-[#181c1b] shadow-lg border border-[#232b45] overflow-hidden flex flex-col">
                                     {link.coverImage && (
-                                        <Image src={link.coverImage} alt={link.title} width={400} height={225} className="w-full h-48 object-cover" />
+                                        <div className="relative h-40 sm:h-48">
+                                            <Image
+                                                src={link.coverImage}
+                                                alt={link.title}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
                                     )}
                                     <div className="p-4 flex-1 flex flex-col gap-2">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-lg font-bold text-white line-clamp-1">{link.title}</span>
+                                            <span className="text-base sm:text-lg font-bold text-white line-clamp-1">{link.title}</span>
                                         </div>
-                                        <p className="text-gray-400 text-sm line-clamp-2">{link.description}</p>
-                                        <div className="flex items-center gap-4 mt-auto">
+                                        <p className="text-gray-400 text-xs sm:text-sm line-clamp-2">{link.description}</p>
+                                        <div className="flex items-center justify-between mt-auto">
                                             <span className="text-xs text-gray-500">{formatDate(link.createdAt)}</span>
                                             {/* Edit/Delete for owner only */}
                                             {isOwner && (
-                                                <>
+                                                <div className="flex gap-2">
                                                     <button className="text-xs text-blue-400 hover:underline">Edit</button>
-                                                    <button className="text-xs text-red-400 hover:underline ml-2">Delete</button>
-                                                </>
+                                                    <button className="text-xs text-red-400 hover:underline">Delete</button>
+                                                </div>
                                             )}
                                         </div>
-                                        <LinkNext href={`/unlock?id=${idStr}`} className="mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold shadow hover:from-blue-600 hover:to-purple-600 transition text-center">Unlock</LinkNext>
+                                        <LinkNext
+                                            href={`/unlock?id=${idStr}`}
+                                            className="mt-2 px-3 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold shadow hover:from-blue-600 hover:to-purple-600 transition text-center text-sm sm:text-base"
+                                        >
+                                            Unlock
+                                        </LinkNext>
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
+
+                    {/* Empty State */}
+                    {filteredLinks.length === 0 && (
+                        <div className="text-center py-12">
+                            <div className="text-gray-400 text-lg mb-2">No content found</div>
+                            <div className="text-gray-500 text-sm">
+                                {search ? "Try adjusting your search terms" : "This user hasn't created any content yet"}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

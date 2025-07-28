@@ -81,11 +81,11 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                 </div>
                 <button
                     onClick={() => window.open(destinationUrl, '_blank')}
-                    className="w-full px-6 py-3 rounded-lg bg-green-600 text-white font-bold shadow hover:bg-green-700 transition text-center text-lg flex items-center justify-center gap-2"
+                    className="w-full px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-green-600 text-white font-bold shadow hover:bg-green-700 transition text-center text-base sm:text-lg flex items-center justify-center gap-2"
                 >
                     <FaUnlock /> Go to Unlocked Content
                 </button>
-                <div className="text-green-400 font-semibold flex items-center gap-2">
+                <div className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base">
                     <FaUnlock /> Unlocked!
                 </div>
             </div>
@@ -113,7 +113,7 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                             onClick={() => handleActionComplete(idx)}
                         >
                             <div className={`flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2 ${platform?.color || 'bg-gray-600'}`}>
-                                <IconComponent className="text-lg" />
+                                <IconComponent className="text-base sm:text-lg" />
                                 <span className="text-xs font-semibold text-gray-300">{action.label}</span>
                                 {completed[idx] && <span className="text-green-400 text-xs ml-2">Completed</span>}
                             </div>
@@ -129,7 +129,7 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                     onChange={e => setNotRobot(e.target.checked)}
                     className="accent-green-500 w-4 h-4"
                 />
-                <label htmlFor="not-robot" className="text-gray-300 text-sm select-none cursor-pointer">
+                <label htmlFor="not-robot" className="text-gray-300 text-xs sm:text-sm select-none cursor-pointer">
                     I&apos;m not a robot
                 </label>
             </div>
@@ -139,12 +139,12 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
             </div>
             <button
                 type="submit"
-                className="w-full px-6 py-3 rounded-lg bg-gray-800 text-gray-400 font-bold flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
+                className="w-full px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-gray-800 text-gray-400 font-bold flex items-center justify-center gap-2 mt-2 disabled:opacity-60 text-base sm:text-lg"
                 disabled={!allComplete || tracking}
             >
                 {tracking ? (
                     <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <div className="animate-spin rounded-full h-3 sm:h-4 w-3 sm:w-4 border-b-2 border-white"></div>
                         Processing...
                     </>
                 ) : (

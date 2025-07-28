@@ -147,20 +147,20 @@ export default function CreatePage() {
     }
 
     return (
-        <div className="pt-18 flex flex-col md:flex-row gap-10 max-w-6xl mx-auto py-12 px-2 md:px-0">
+        <div className="pt-18 flex flex-col lg:flex-row gap-6 sm:gap-10 max-w-6xl mx-auto py-6 sm:py-12 px-4 sm:px-6 lg:px-0">
             {/* Left: Form */}
             <form
                 onSubmit={handleSubmit}
                 encType="multipart/form-data"
-                className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-3xl shadow-2xl p-10 w-full max-w-lg border border-[#232b45] flex flex-col gap-8 relative"
+                className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 w-full max-w-lg border border-[#232b45] flex flex-col gap-6 sm:gap-8 relative"
                 style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.25)" }}
             >
-                <button type="button" onClick={() => router.back()} className="absolute left-6 top-6 flex items-center gap-2 text-gray-400 hover:text-white text-base font-medium">
+                <button type="button" onClick={() => router.back()} className="absolute left-4 sm:left-6 top-4 sm:top-6 flex items-center gap-2 text-gray-400 hover:text-white text-sm sm:text-base font-medium">
                     <FaChevronLeft /> Go back
                 </button>
-                <div className="flex items-center justify-between mb-2 mt-2">
-                    <h2 className="text-3xl font-extrabold text-white tracking-tight">Create Unlock Link</h2>
-                    <button type="button" className="flex items-center gap-1 text-green-400 bg-[#232b45] px-4 py-1.5 rounded-full text-sm font-semibold shadow hover:bg-green-500/10 transition" title="Learn how unlock links work"><FaRegQuestionCircle /> How It Works</button>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 mt-2 gap-2">
+                    <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Create Unlock Link</h2>
+                    <button type="button" className="flex items-center gap-1 text-green-400 bg-[#232b45] px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold shadow hover:bg-green-500/10 transition" title="Learn how unlock links work"><FaRegQuestionCircle /> How It Works</button>
                 </div>
                 <div className="mb-2">
                     <div className="text-xs text-gray-400 mb-1 font-medium">Content Policy Violations</div>
@@ -181,31 +181,31 @@ export default function CreatePage() {
                         {coverPreview ? (
                             <Image src={coverPreview} width={320} height={180} alt="Cover preview" className="rounded-lg w-full object-cover aspect-video mb-2 transition-all duration-300" />
                         ) : (
-                            <FaRegImage className="text-4xl text-gray-500 mb-2" />
+                            <FaRegImage className="text-3xl sm:text-4xl text-gray-500 mb-2" />
                         )}
                         <input type="file" accept="image/*" className="hidden" id="cover-upload" onChange={handleCoverChange} ref={fileInputRef} />
-                        <label htmlFor="cover-upload" className="text-xs text-gray-400 cursor-pointer hover:text-green-400">16:9 ratio recommended (JPG, PNG) — Drag & drop or click to upload</label>
+                        <label htmlFor="cover-upload" className="text-xs text-gray-400 cursor-pointer hover:text-green-400 text-center">16:9 ratio recommended (JPG, PNG) — Drag & drop or click to upload</label>
                     </div>
                 </div>
                 {/* Floating label inputs */}
                 <div className="relative mb-2">
-                    <input type="text" id="title" className="peer w-full px-4 py-3 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-transparent" placeholder="Enter a title *" value={title} onChange={e => setTitle(e.target.value)} required maxLength={80} />
-                    <label htmlFor="title" className="absolute left-4 top-3 text-gray-400 text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter a title *</label>
+                    <input type="text" id="title" className="peer w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-transparent text-sm sm:text-base" placeholder="Enter a title *" value={title} onChange={e => setTitle(e.target.value)} required maxLength={80} />
+                    <label htmlFor="title" className="absolute left-3 sm:left-4 top-2 sm:top-3 text-gray-400 text-xs sm:text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-2 sm:peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs sm:peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter a title *</label>
                 </div>
                 <div className="relative mb-2">
-                    <input type="text" id="desc" className="peer w-full px-4 py-3 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-transparent" placeholder="Enter a short-description" value={description} onChange={e => setDescription(e.target.value)} maxLength={200} />
-                    <label htmlFor="desc" className="absolute left-4 top-3 text-gray-400 text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter a short-description</label>
+                    <input type="text" id="desc" className="peer w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-transparent text-sm sm:text-base" placeholder="Enter a short-description" value={description} onChange={e => setDescription(e.target.value)} maxLength={200} />
+                    <label htmlFor="desc" className="absolute left-3 sm:left-4 top-2 sm:top-3 text-gray-400 text-xs sm:text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-2 sm:peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs sm:peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter a short-description</label>
                 </div>
                 {/* Unlock Actions */}
                 <div className="mb-2">
-                    <div className="font-semibold text-gray-300 mb-2 flex items-center gap-2">UNLOCK ACTIONS</div>
+                    <div className="font-semibold text-gray-300 mb-2 flex items-center gap-2 text-sm sm:text-base">UNLOCK ACTIONS</div>
                     {unlockActions.map((action, idx) => {
                         return (
-                            <div key={idx} className="flex flex-col gap-3 mb-4 bg-[#181c1b] p-4 rounded-xl border border-gray-700 relative">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex gap-2">
+                            <div key={idx} className="flex flex-col gap-3 mb-4 bg-[#181c1b] p-3 sm:p-4 rounded-xl border border-gray-700 relative">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                                    <div className="flex flex-col sm:flex-row gap-2">
                                         <select
-                                            className="px-3 py-2 rounded-lg bg-[#101213] border border-gray-700 text-white focus:ring-2 focus:ring-green-500 text-sm"
+                                            className="px-3 py-2 rounded-lg bg-[#101213] border border-gray-700 text-white focus:ring-2 focus:ring-green-500 text-xs sm:text-sm"
                                             value={action.platform}
                                             onChange={e => handleActionChange(idx, "platform", e.target.value)}
                                         >
@@ -214,7 +214,7 @@ export default function CreatePage() {
                                             ))}
                                         </select>
                                         <select
-                                            className="px-3 py-2 rounded-lg bg-[#101213] border border-gray-700 text-white focus:ring-2 focus:ring-green-500 text-sm"
+                                            className="px-3 py-2 rounded-lg bg-[#101213] border border-gray-700 text-white focus:ring-2 focus:ring-green-500 text-xs sm:text-sm"
                                             value={action.type}
                                             onChange={e => handleActionChange(idx, "type", e.target.value)}
                                         >
@@ -225,7 +225,7 @@ export default function CreatePage() {
                                     </div>
                                     {unlockActions.length > 1 && (
                                         <button type="button" className="text-red-400 hover:text-red-600" onClick={() => removeUnlockAction(idx)} title="Remove Step">
-                                            <FaTrash />
+                                            <FaTrash className="text-sm sm:text-base" />
                                         </button>
                                     )}
                                 </div>
@@ -233,7 +233,7 @@ export default function CreatePage() {
                                     <div className="space-y-2">
                                         <input
                                             type="url"
-                                            className={`w-full px-4 py-3 rounded-lg border-2 ${urlErrors[idx] ? 'border-red-500' : 'border-green-500'} bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500`}
+                                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border-2 ${urlErrors[idx] ? 'border-red-500' : 'border-green-500'} bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 text-xs sm:text-sm`}
                                             placeholder={`Enter ${action.label.toLowerCase()} URL *`}
                                             value={action.url}
                                             onChange={e => handleActionUrlChange(idx, e.target.value)}
@@ -253,46 +253,46 @@ export default function CreatePage() {
                             </div>
                         );
                     })}
-                    <button type="button" className="flex items-center gap-2 text-green-400 hover:text-green-600 mt-2" onClick={addUnlockAction}>
+                    <button type="button" className="flex items-center gap-2 text-green-400 hover:text-green-600 mt-2 text-sm sm:text-base" onClick={addUnlockAction}>
                         <FaPlus /> Add Step
                     </button>
                 </div>
                 {/* End Unlock Actions */}
                 {/* Destination URL */}
                 <div className="relative mb-2">
-                    <input type="url" id="destinationUrl" className="peer w-full px-4 py-3 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-transparent" placeholder="Enter destination URL *" value={destinationUrl} onChange={e => setDestinationUrl(e.target.value)} required />
-                    <label htmlFor="destinationUrl" className="absolute left-4 top-3 text-gray-400 text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter destination URL *</label>
+                    <input type="url" id="destinationUrl" className="peer w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-700 bg-[#101213] text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-transparent text-sm sm:text-base" placeholder="Enter destination URL *" value={destinationUrl} onChange={e => setDestinationUrl(e.target.value)} required />
+                    <label htmlFor="destinationUrl" className="absolute left-3 sm:left-4 top-2 sm:top-3 text-gray-400 text-xs sm:text-sm pointer-events-none transition-all duration-200 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-green-400 peer-placeholder-shown:top-2 sm:peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs sm:peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400">Enter destination URL *</label>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
-                    <input type="checkbox" id="not-robot" checked={notRobot} onChange={e => setNotRobot(e.target.checked)} className="accent-green-500 w-5 h-5 rounded border-2 border-gray-600 focus:ring-2 focus:ring-green-400 transition" />
-                    <label htmlFor="not-robot" className="text-gray-300 text-base select-none cursor-pointer font-medium">I&apos;m not a robot</label>
+                    <input type="checkbox" id="not-robot" checked={notRobot} onChange={e => setNotRobot(e.target.checked)} className="accent-green-500 w-4 h-4 sm:w-5 sm:h-5 rounded border-2 border-gray-600 focus:ring-2 focus:ring-green-400 transition" />
+                    <label htmlFor="not-robot" className="text-gray-300 text-sm sm:text-base select-none cursor-pointer font-medium">I&apos;m not a robot</label>
                 </div>
-                {error && <div className="text-red-500 font-medium mt-2">{error}</div>}
-                <button type="submit" className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white font-bold shadow-lg hover:from-green-600 hover:to-purple-600 transition disabled:opacity-60 mt-2 text-lg tracking-wide" disabled={loading || !notRobot}>{loading ? "Creating..." : "Create Link"}</button>
+                {error && <div className="text-red-500 font-medium mt-2 text-sm sm:text-base">{error}</div>}
+                <button type="submit" className="w-full px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white font-bold shadow-lg hover:from-green-600 hover:to-purple-600 transition disabled:opacity-60 mt-2 text-base sm:text-lg tracking-wide" disabled={loading || !notRobot}>{loading ? "Creating..." : "Create Link"}</button>
             </form>
             {/* Right: Live Preview */}
             <div className="flex-1 flex flex-col items-center justify-center">
-                <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-3xl shadow-2xl p-10 w-full max-w-md border border-[#232b45] flex flex-col gap-4 items-center transition-all duration-300" style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.25)" }}>
+                <div className="bg-[rgba(24,28,27,0.85)] backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 w-full max-w-md border border-[#232b45] flex flex-col gap-4 items-center transition-all duration-300" style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.25)" }}>
                     <div className="w-full aspect-video bg-[#101213] rounded-lg flex items-center justify-center text-gray-600 mb-4 overflow-hidden">
-                        {coverPreview ? <Image width={320} height={180} src={coverPreview} alt="Preview" className="w-full h-full object-cover transition-all duration-300" /> : <FaRegImage className="text-4xl" />}
+                        {coverPreview ? <Image width={320} height={180} src={coverPreview} alt="Preview" className="w-full h-full object-cover transition-all duration-300" /> : <FaRegImage className="text-3xl sm:text-4xl" />}
                     </div>
-                    <h2 className="text-2xl font-extrabold text-white text-center tracking-tight">{title || "Untitled"}</h2>
-                    <p className="text-gray-400 text-center text-base">{description || "Press the unlock button to access the content"}</p>
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-white text-center tracking-tight">{title || "Untitled"}</h2>
+                    <p className="text-gray-400 text-center text-sm sm:text-base">{description || "Press the unlock button to access the content"}</p>
                     <div className="w-full flex flex-col gap-2 mt-2">
                         {unlockActions.map((action, idx) => {
                             const platform = PLATFORM_OPTIONS.find(p => p.value === action.platform);
                             const IconComponent = platform?.icon || FaRegImage;
                             return (
                                 <div key={idx} className={`flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2 ${platform?.color || 'bg-gray-600'}`}>
-                                    <IconComponent className="text-lg" />
+                                    <IconComponent className="text-sm sm:text-lg" />
                                     <span className="text-xs font-semibold text-gray-300">{action.label}</span>
                                 </div>
                             );
                         })}
                     </div>
-                    <button className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold shadow hover:from-blue-600 hover:to-purple-600 transition text-center text-lg flex items-center justify-center gap-2 mt-2 cursor-not-allowed opacity-70" disabled><FaLock /> Unlock content</button>
+                    <button className="w-full px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold shadow hover:from-blue-600 hover:to-purple-600 transition text-center text-base sm:text-lg flex items-center justify-center gap-2 mt-2 cursor-not-allowed opacity-70" disabled><FaLock /> Unlock content</button>
                 </div>
-                <button className="mt-6 px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-base font-semibold shadow hover:from-blue-600 hover:to-purple-600 transition">Preview Mode</button>
+                <button className="mt-4 sm:mt-6 px-4 sm:px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm sm:text-base font-semibold shadow hover:from-blue-600 hover:to-purple-600 transition">Preview Mode</button>
             </div>
         </div>
     );
