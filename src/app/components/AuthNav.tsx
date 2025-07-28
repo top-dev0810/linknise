@@ -14,13 +14,16 @@ export default function AuthNav() {
     return (
       <nav className="w-full flex items-center justify-between px-6 py-4 bg-white/80 dark:bg-gray-900/80 shadow-md fixed top-0 left-0 z-50 backdrop-blur-md">
         <Link href="/" className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">LinkUnlocker</Link>
-
-      <button
+        <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-3">
+        <button
         onClick={() => signIn()}
         className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold shadow hover:from-blue-600 hover:to-purple-600 transition"
       >
         Sign In
-        </button>
+            </button>
+            </div>
+          </div>
     </nav >
     );
   }
