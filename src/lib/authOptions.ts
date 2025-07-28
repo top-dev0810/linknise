@@ -88,14 +88,9 @@ export const authOptions = {
             if (session?.user) {
                 // Always set email from token
                 session.user.email = token.email as string;
-                await dbConnect();
-                const dbUser = await User.findOne({ email: session.user.email });
-                if (dbUser && session.user) {
-                    (session.user as { id?: string }).id = dbUser._id?.toString();
-                    session.user.name = dbUser.name;
-                    session.user.image = dbUser.image;
-                    (session.user as { username?: string }).username = dbUser.username;
-                }
+                (session.user as { id?: string }).id = (token as { id?: string }).id;
+                (session.user as { username?: string }).username = (token as { username?: string }).username;
+                (session.user as { bio?: string }).bio = (token as { bio?: string }).bio;
             }
             return session;
         },
@@ -106,7 +101,17 @@ export const authOptions = {
                 (token as { id?: string }).id = (user as { id?: string }).id;
                 token.email = user.email;
             }
-            // If token already has email, keep it
+
+            // Fetch user data to include bio in token
+            if (token.email) {
+                await dbConnect();
+                const dbUser = await User.findOne({ email: token.email });
+                if (dbUser) {
+                    (token as { username?: string }).username = dbUser.username;
+                    (token as { bio?: string }).bio = dbUser.bio;
+                }
+            }
+
             return token;
         },
     },

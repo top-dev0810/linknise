@@ -76,7 +76,6 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                     {unlockActions.map((action, idx) => (
                         <div key={idx} className="flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2">
                             <span className="text-xs font-semibold text-gray-300">{action.label}</span>
-                            <span className="text-xs text-blue-400 break-all">{action.url}</span>
                         </div>
                     ))}
                 </div>
@@ -116,7 +115,6 @@ export default function UnlockClient({ unlockActions, destinationUrl }: { unlock
                             <div className={`flex items-center gap-2 bg-[#181c1b] rounded-lg px-3 py-2 ${platform?.color || 'bg-gray-600'}`}>
                                 <IconComponent className="text-lg" />
                                 <span className="text-xs font-semibold text-gray-300">{action.label}</span>
-                                {action.url}
                                 {completed[idx] && <span className="text-green-400 text-xs ml-2">Completed</span>}
                             </div>
                         </a>

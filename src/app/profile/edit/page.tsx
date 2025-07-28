@@ -92,6 +92,8 @@ export default function ProfileEditPage() {
                     user: {
                         ...session?.user,
                         name: profile.name,
+                        username: profile.username,
+                        bio: profile.bio,
                         image: data.image || session?.user?.image,
                     },
                 });
